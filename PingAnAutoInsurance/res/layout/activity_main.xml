@@ -3,7 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
-
+	<include android:id="@+id/top_bar" 
+        	layout="@layout/top_bar"/>
+	<LinearLayout
+	    android:layout_below="@id/top_bar" 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical" >
 	<Button 
 	    android:id="@+id/create_insurance_policy_btn"
 	    android:layout_width="wrap_content"
@@ -14,5 +20,5 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:text="查看保单"/>
-
+	</LinearLayout>
 </RelativeLayout>
