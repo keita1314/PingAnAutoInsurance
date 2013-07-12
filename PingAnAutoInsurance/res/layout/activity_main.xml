@@ -14,11 +14,26 @@
 	    android:id="@+id/create_insurance_policy_btn"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:text="创建保单"/>
+	    android:text="开启理赔案件"/>
 	<Button 
 	    android:id="@+id/all_insurance_policy_btn"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:text="查看保单"/>
+	    android:text="查看理赔案件"/>
+	<Button 
+	    android:id="@+id/picture_repo_btn"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="照片库 "/>
+	<Button 
+	    android:id="@+id/record_repo_btn"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="录音库 "/>
+	<Button 
+	    android:id="@+id/situation_template_btn"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="情景模版"/>
 	</LinearLayout>
 </RelativeLayout>
