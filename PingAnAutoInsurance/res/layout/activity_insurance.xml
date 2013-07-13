@@ -33,15 +33,21 @@
         android:id="@+id/case_driver"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
      <TextView 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="被保险人与驾驶员关系"
+       	android:layout_weight="0"
         />
     <Spinner
         android:id="@+id/relationship" 
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+    </LinearLayout>
     <TextView 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
