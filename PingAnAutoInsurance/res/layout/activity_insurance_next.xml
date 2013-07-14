@@ -65,6 +65,14 @@
            android:layout_width="wrap_content"
            android:textColor="#000000"
            android:text="发生事故经过情况描述"/>
+          <EditText
+              android:id="@+id/accident_detail"
+              android:layout_width="fill_parent"
+              android:layout_height="100dp"/>
+          <Button 
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="保存案件"/>
     </LinearLayout>
 </ScrollView>
 
