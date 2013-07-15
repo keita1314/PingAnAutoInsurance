@@ -70,6 +70,11 @@
               android:layout_width="fill_parent"
               android:layout_height="100dp"/>
           <Button 
+              android:id="@+id/record"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="录音"/>
+          <Button 
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="保存案件"/>
