@@ -2,7 +2,10 @@ package com.keita.pinganautoinsurance;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class MainActivity extends Activity {
@@ -21,6 +24,19 @@ public class MainActivity extends Activity {
         photo_btn = (Button)findViewById(R.id.picture_repo_btn);
         record_btn = (Button)findViewById(R.id.record_repo_btn);
         situation_btn = (Button)findViewById(R.id.situation_template_btn);
+        
+        //开启理赔案件
+        create_btn.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+				intent.setClass(MainActivity.this,InsuranceActivity.class);
+				startActivity(intent);
+			}
+        	
+        });
         
         
     }
