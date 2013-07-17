@@ -1,8 +1,22 @@
 package com.keita.pinganautoinsurance;
 
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.R.color;
 import android.app.Activity;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,63 +33,201 @@ import android.widget.Toast;
 
 public class InsuranceNextActivity extends Activity {
 	private Button record_btn = null;
+	private Button record_stop_btn = null;
+	private Timer timer = null;
+	Toast recording_toast = null;
+	ImageView record_animate = null;
+	LinearLayout toast_view = null;
+	private AudioRecord ar;
+	private int bs;
+	private static int SAMPLE_RATE_IN_HZ = 8000;
+	/* 录制音频文件 */
+	private File recAudioFile = null;
+	DataOutputStream dos = null;
+	private File recordDir = null;
+	private String SDPath = null;
+	boolean isRecording = false;
+	boolean isShowing = true;
 
-	boolean isLongClick = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_insurance_next);
-		record_btn = (Button)findViewById(R.id.record_btn);
+		record_btn = (Button) findViewById(R.id.record_btn);
+		record_stop_btn = (Button) findViewById(R.id.record_stop_btn);
+		/* 检测SD卡存在 */
+		if (Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED)) {
+			Log.v("SD", "exist");
+			SDPath = Environment.getExternalStorageDirectory()
+					.getAbsolutePath();
+			Log.v("SDPath", SDPath);
+			String fileName = "/PingAn/record";
+			recordDir = new File(SDPath + "/PingAn/record");
+			if (!isFileExist(fileName)) {
+				Log.v("test", "not exist");
+				if (recordDir.mkdirs())
+					Log.v("create", "succ");
+				else
+					Log.v("create", "failed");
+			}
+
+		}
 		
-		//录音按钮监听
-		/*record_btn.setOnClickListener(new OnClickListener(){
+	
+		// 录音按钮监听
+		record_btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				recording_toast = Toast.makeText(getApplicationContext(),
+						" 正在录音  ", Toast.LENGTH_SHORT);
+				record_animate = new ImageView(getApplicationContext());
+
+				recording_toast.setGravity(Gravity.CENTER, 0, 0);
+				record_animate.setImageResource(R.drawable.record_animate_02);
+				toast_view = (LinearLayout) recording_toast.getView();
+				toast_view.addView(record_animate, 0);
+				recording_toast.setView(toast_view);
+
+				bs = AudioRecord.getMinBufferSize(SAMPLE_RATE_IN_HZ,
+						AudioFormat.CHANNEL_CONFIGURATION_MONO,
+						AudioFormat.ENCODING_PCM_16BIT);
+				ar = new AudioRecord(MediaRecorder.AudioSource.MIC,
+						SAMPLE_RATE_IN_HZ,
+						AudioFormat.CHANNEL_CONFIGURATION_MONO,
+						AudioFormat.ENCODING_PCM_16BIT, bs * 10);
+				try {
+					recAudioFile = new File(recordDir.getAbsolutePath()
+							+ "/1.amr");
+					recAudioFile.createNewFile();
+					dos = new DataOutputStream(new BufferedOutputStream(
+							new FileOutputStream(recAudioFile)));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				ar.startRecording();
+				isShowing = true;
+				Log.v("test", "录音");
+				timer = new Timer();
+				isRecording = true;
+				timer.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+
+						while (isShowing && isRecording) {
+
+							// 用于读取的
+							byte[] buffer = new byte[bs];
+							int r = ar.read(buffer, 0, bs);
+							int v = 0;
+							// 将 buffer 内容取出
+							for (int i = 0; i < buffer.length; i++) {
+
+								try {
+									if (dos != null)
+										dos.write(buffer[i]);
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								v += buffer[i] * buffer[i];
+							}
+							// 平方和除以数据总长度，得到音量大小。可以获取白噪声值，然后对实际采样进行标准化。
+							Log.d("spl", String.valueOf(v / (float) r));
+							int volume = v /  r;
+							//根据音量大小设置动画
+							Message msg = new Message();
+							msg.what = volume;
+							handler.sendMessage(msg);
+							recording_toast.show();
+
+						}
+					}
+
+				}, 0);
+
+			}
+
+		});
+
+		record_stop_btn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Toast recording_toast = Toast.makeText(getApplicationContext(), " 正在录音  ", Toast.LENGTH_LONG);
-				ImageView iv = new ImageView(getApplicationContext());
-				
-				recording_toast.setGravity(Gravity.CENTER, 0, 0);
-				iv.setImageResource(R.drawable.record_animate_02);
-				LinearLayout toast_view = (LinearLayout)recording_toast.getView();
-				toast_view.addView(iv, 0);
-				recording_toast.setView(toast_view);
-				recording_toast.show();
-			}
-				
-		});*/
-		record_btn.setOnLongClickListener(new OnLongClickListener(){
+				if (isRecording) {
+					isShowing = false;
+					Log.v("test", "停止");
 
-			@Override
-			public boolean onLongClick(View arg0) {
-				// TODO Auto-generated method stub
-				Log.v("test", "长按");
-				isLongClick = true;
-				return false;
-			}
-			
-		});
-		record_btn.setOnTouchListener(new OnTouchListener(){
+					ar.stop();
+					ar.release();
+					ar = null;
+					isRecording = false;
+					timer.cancel();
+					recording_toast.cancel();
 
-			@Override
-			public boolean onTouch(View view, MotionEvent event) {
-				// TODO Auto-generated method stub
-				switch(event.getAction()){
-				case MotionEvent.ACTION_UP :
-					if(isLongClick){
-						Log.v("test", "松开");
-						isLongClick = false;
-					}
-					break;
-					default:
-						break;
 				}
-				return false;
 			}
-			
+
 		});
 	}
-	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		timer.cancel();
+	}
+	private Handler handler = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			super.handleMessage(msg);
+			Log.v("handler", ""+msg.what);
+			toast_view.removeViewAt(0);
+			if(msg.what>2000 &&msg.what<2100){
+				record_animate.setImageResource(R.drawable.record_animate_03);
+				toast_view = (LinearLayout) recording_toast.getView();
+				toast_view.addView(record_animate, 0);
+				recording_toast.setView(toast_view);
+			}
+			if(msg.what>2100 &&msg.what<2200){
+				record_animate.setImageResource(R.drawable.record_animate_04);
+				toast_view = (LinearLayout) recording_toast.getView();
+				toast_view.addView(record_animate, 0);
+				recording_toast.setView(toast_view);
+			}
+			if(msg.what>2200 &&msg.what<2300){
+				record_animate.setImageResource(R.drawable.record_animate_05);
+				toast_view = (LinearLayout) recording_toast.getView();
+				toast_view.addView(record_animate, 0);
+				recording_toast.setView(toast_view);
+			}
+			if(msg.what>2300 &&msg.what<2400){
+				record_animate.setImageResource(R.drawable.record_animate_06);
+				toast_view = (LinearLayout) recording_toast.getView();
+				toast_view.addView(record_animate, 0);
+				recording_toast.setView(toast_view);
+			}
+			if(msg.what>2400 &&msg.what<2500){
+				record_animate.setImageResource(R.drawable.record_animate_07);
+				toast_view = (LinearLayout) recording_toast.getView();
+				toast_view.addView(record_animate, 0);
+				recording_toast.setView(toast_view);
+			}
+
+		}
+		
+		
+	};
+	// 判断文件是否存在
+	public boolean isFileExist(String fileName) {
+		File file = new File(SDPath + fileName);
+		return file.exists();
+	}
 }

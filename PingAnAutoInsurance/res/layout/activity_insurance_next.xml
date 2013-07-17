@@ -73,7 +73,12 @@
               android:id="@+id/record_btn"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:background="@drawable/record_normal_icon"/>
+              android:text="正在录音"/>
+          <Button 
+              android:id="@+id/record_stop_btn"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="停止录音"/>
           <Button 
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
