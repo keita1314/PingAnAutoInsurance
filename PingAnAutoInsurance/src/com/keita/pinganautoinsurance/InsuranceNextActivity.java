@@ -169,6 +169,7 @@ public class InsuranceNextActivity extends Activity {
 					ar = null;
 					isRecording = false;
 					timer.cancel();
+					toast_view.setVisibility(View.INVISIBLE);
 					recording_toast.cancel();
 
 				}
@@ -182,6 +183,7 @@ public class InsuranceNextActivity extends Activity {
 		super.onDestroy();
 		timer.cancel();
 	}
+	//根据声音大小 更新UI
 	private Handler handler = new Handler(){
 
 		@Override
@@ -189,38 +191,62 @@ public class InsuranceNextActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 			Log.v("handler", ""+msg.what);
+			toast_view = (LinearLayout) recording_toast.getView();
 			toast_view.removeViewAt(0);
-			if(msg.what>2000 &&msg.what<2100){
-				record_animate.setImageResource(R.drawable.record_animate_03);
-				toast_view = (LinearLayout) recording_toast.getView();
-				toast_view.addView(record_animate, 0);
-				recording_toast.setView(toast_view);
-			}
-			if(msg.what>2100 &&msg.what<2200){
-				record_animate.setImageResource(R.drawable.record_animate_04);
-				toast_view = (LinearLayout) recording_toast.getView();
-				toast_view.addView(record_animate, 0);
-				recording_toast.setView(toast_view);
-			}
-			if(msg.what>2200 &&msg.what<2300){
-				record_animate.setImageResource(R.drawable.record_animate_05);
-				toast_view = (LinearLayout) recording_toast.getView();
-				toast_view.addView(record_animate, 0);
-				recording_toast.setView(toast_view);
-			}
-			if(msg.what>2300 &&msg.what<2400){
-				record_animate.setImageResource(R.drawable.record_animate_06);
-				toast_view = (LinearLayout) recording_toast.getView();
-				toast_view.addView(record_animate, 0);
-				recording_toast.setView(toast_view);
-			}
+			//根据音量大小显示不同的图片 数值是由录音计算出的音量大小
 			if(msg.what>2400 &&msg.what<2500){
-				record_animate.setImageResource(R.drawable.record_animate_07);
-				toast_view = (LinearLayout) recording_toast.getView();
-				toast_view.addView(record_animate, 0);
-				recording_toast.setView(toast_view);
+				record_animate.setImageResource(R.drawable.record_animate_03);
 			}
+			if(msg.what>2500 &&msg.what<2600){
+				record_animate.setImageResource(R.drawable.record_animate_04);
+			
+			}
+			if(msg.what>2600 &&msg.what<2700){
+				record_animate.setImageResource(R.drawable.record_animate_05);
+		
+			}
+			if(msg.what>2700 &&msg.what<2800){
+				record_animate.setImageResource(R.drawable.record_animate_06);
 
+			}
+			if(msg.what>2800 &&msg.what<2900){
+				record_animate.setImageResource(R.drawable.record_animate_07);
+				
+			}
+			if(msg.what>2900 &&msg.what<3000){
+				record_animate.setImageResource(R.drawable.record_animate_08);
+				
+			}
+			if(msg.what>3000 &&msg.what<3100){
+				record_animate.setImageResource(R.drawable.record_animate_09);
+				
+			}
+			if(msg.what>3100 &&msg.what<3200){
+				record_animate.setImageResource(R.drawable.record_animate_09);
+				
+			}
+			if(msg.what>3200 &&msg.what<3300){
+				record_animate.setImageResource(R.drawable.record_animate_10);
+				
+			}
+			if(msg.what>3300 &&msg.what<3400){
+				record_animate.setImageResource(R.drawable.record_animate_11);
+				
+			}
+			if(msg.what>3400 &&msg.what<3500){
+				record_animate.setImageResource(R.drawable.record_animate_12);
+				
+			}
+			if(msg.what>3500 &&msg.what<3600){
+				record_animate.setImageResource(R.drawable.record_animate_13);
+				
+			}
+			if(msg.what>3600 ){
+				record_animate.setImageResource(R.drawable.record_animate_14);
+				
+			}
+			toast_view.addView(record_animate, 0);
+			recording_toast.setView(toast_view);
 		}
 		
 		
