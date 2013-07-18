@@ -10,9 +10,11 @@ import java.util.TimerTask;
 
 import android.R.color;
 import android.app.Activity;
+import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -34,6 +36,7 @@ import android.widget.Toast;
 public class InsuranceNextActivity extends Activity {
 	private Button record_btn = null;
 	private Button record_stop_btn = null;
+	private Button record_play_btn = null;
 	private Timer timer = null;
 	Toast recording_toast = null;
 	ImageView record_animate = null;
@@ -56,6 +59,7 @@ public class InsuranceNextActivity extends Activity {
 		setContentView(R.layout.activity_insurance_next);
 		record_btn = (Button) findViewById(R.id.record_btn);
 		record_stop_btn = (Button) findViewById(R.id.record_stop_btn);
+		record_play_btn = (Button)findViewById(R.id.record_play_btn);
 		/* 检测SD卡存在 */
 		if (Environment.getExternalStorageState().equals(
 				android.os.Environment.MEDIA_MOUNTED)) {
@@ -139,7 +143,11 @@ public class InsuranceNextActivity extends Activity {
 							}
 							// 平方和除以数据总长度，得到音量大小。可以获取白噪声值，然后对实际采样进行标准化。
 							Log.d("spl", String.valueOf(v / (float) r));
-							int volume = v /  r;
+							int volume =0;
+							if(r!=0)
+								volume = v /  r;
+							else 
+								volume = 2400;
 							//根据音量大小设置动画
 							Message msg = new Message();
 							msg.what = volume;
@@ -163,7 +171,12 @@ public class InsuranceNextActivity extends Activity {
 				if (isRecording) {
 					isShowing = false;
 					Log.v("test", "停止");
-
+					try {
+						dos.close();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					ar.stop();
 					ar.release();
 					ar = null;
@@ -175,6 +188,19 @@ public class InsuranceNextActivity extends Activity {
 				}
 			}
 
+		});
+		record_play_btn.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent.setAction(android.content.Intent.ACTION_VIEW);
+				intent.setDataAndType(Uri.fromFile(recAudioFile), "audio");
+				startActivity(intent);
+			}
+			
 		});
 	}
 	@Override
@@ -245,6 +271,8 @@ public class InsuranceNextActivity extends Activity {
 				record_animate.setImageResource(R.drawable.record_animate_14);
 				
 			}
+			else
+				record_animate.setImageResource(R.drawable.record_animate_01);
 			toast_view.addView(record_animate, 0);
 			recording_toast.setView(toast_view);
 		}
