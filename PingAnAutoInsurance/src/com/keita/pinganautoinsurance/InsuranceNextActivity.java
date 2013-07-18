@@ -1,10 +1,14 @@
 package com.keita.pinganautoinsurance;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -12,9 +16,12 @@ import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioRecord;
+import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -51,6 +58,7 @@ public class InsuranceNextActivity extends Activity {
 	private String SDPath = null;
 	boolean isRecording = false;
 	boolean isShowing = true;
+	boolean isPlaying = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +113,7 @@ public class InsuranceNextActivity extends Activity {
 						AudioFormat.ENCODING_PCM_16BIT, bs * 10);
 				try {
 					recAudioFile = new File(recordDir.getAbsolutePath()
-							+ "/1.amr");
+							+ "/1.pcm");
 					recAudioFile.createNewFile();
 					dos = new DataOutputStream(new BufferedOutputStream(
 							new FileOutputStream(recAudioFile)));
@@ -171,12 +179,12 @@ public class InsuranceNextActivity extends Activity {
 				if (isRecording) {
 					isShowing = false;
 					Log.v("test", "停止");
-					try {
+				/*	try {
 						dos.close();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					}*/
 					ar.stop();
 					ar.release();
 					ar = null;
@@ -194,11 +202,13 @@ public class InsuranceNextActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent();
+				/*Intent intent = new Intent();
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.setAction(android.content.Intent.ACTION_VIEW);
 				intent.setDataAndType(Uri.fromFile(recAudioFile), "audio");
-				startActivity(intent);
+				startActivity(intent);*/
+				Log.v("Play", "Play");
+				new PlayAsyncTask().execute();
 			}
 			
 		});
@@ -208,6 +218,13 @@ public class InsuranceNextActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		timer.cancel();
+		try {
+			dos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Log.v("test", "destory");
 	}
 	//根据声音大小 更新UI
 	private Handler handler = new Handler(){
@@ -271,7 +288,7 @@ public class InsuranceNextActivity extends Activity {
 				record_animate.setImageResource(R.drawable.record_animate_14);
 				
 			}
-			else
+			else if(msg.what<2400)
 				record_animate.setImageResource(R.drawable.record_animate_01);
 			toast_view.addView(record_animate, 0);
 			recording_toast.setView(toast_view);
@@ -283,5 +300,45 @@ public class InsuranceNextActivity extends Activity {
 	public boolean isFileExist(String fileName) {
 		File file = new File(SDPath + fileName);
 		return file.exists();
+	}
+	class PlayAsyncTask extends AsyncTask<Void,Void,Void>{
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			isPlaying = true;
+			int bufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE_IN_HZ, AudioFormat.CHANNEL_CONFIGURATION_MONO,
+					AudioFormat.ENCODING_PCM_16BIT);
+			byte[] buffer = new byte[bufferSize];
+			try{
+				DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(recAudioFile)));
+				AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC,
+						SAMPLE_RATE_IN_HZ, 
+						AudioFormat.CHANNEL_CONFIGURATION_MONO,
+						AudioFormat.ENCODING_PCM_16BIT,
+						bufferSize,
+						AudioTrack.MODE_STREAM);
+				//开始播放
+				track.setStereoVolume(1.0f, 1.0f);
+				track.pause();
+				while(isPlaying && dis.available()>0){
+					
+					int i = 0;
+					while(dis.available()>0 &&i<buffer.length){
+						Log.v("Play", "isPlaying");
+						buffer[i] = dis.readByte();
+						i++;
+					}
+					track.write(buffer, 0, buffer.length);
+				}
+				//播放结束
+				track.stop();
+				dis.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
 	}
 }
