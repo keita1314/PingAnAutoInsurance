@@ -86,6 +86,9 @@ public class InsuranceNextActivity extends Activity {
 			}
 
 		}
+		else{
+			Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT);
+		}
 		
 	
 		// 录音按钮监听

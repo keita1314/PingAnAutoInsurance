@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
-				intent.setClass(MainActivity.this,InsuranceActivity.class);
+				intent.setClass(MainActivity.this,InsurancePhotoActivity.class);
 				startActivity(intent);
 			}
         	
