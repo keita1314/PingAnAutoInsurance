@@ -320,7 +320,7 @@ public class InsuranceNextActivity extends Activity {
 						AudioTrack.MODE_STREAM);
 				//开始播放
 				track.setStereoVolume(1.0f, 1.0f);
-				track.pause();
+				track.play();
 				while(isPlaying && dis.available()>0){
 					
 					int i = 0;
