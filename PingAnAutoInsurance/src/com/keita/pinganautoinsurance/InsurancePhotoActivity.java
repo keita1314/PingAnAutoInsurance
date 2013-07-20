@@ -3,7 +3,11 @@ package com.keita.pinganautoinsurance;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,6 +38,7 @@ public class InsurancePhotoActivity extends Activity {
 		setContentView(R.layout.activity_insurance_photo);
 		camera_btn = (Button) findViewById(R.id.camera_btn);
 		photo_list = (ListView)findViewById(R.id.photo_list);
+		
 		/* 检测SD卡存在 */
 		if (Environment.getExternalStorageState().equals(
 				android.os.Environment.MEDIA_MOUNTED)) {
@@ -94,6 +99,16 @@ public class InsurancePhotoActivity extends Activity {
 				Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT);
 			}
 		}
+	}
+
+	private List<Map<String, Object>> getData(int imageNo,Bitmap bitmap) {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Integer.toString(imageNo), bitmap);
+		
+		list.add(map);
+		return list;
 	}
 	// 判断文件是否存在
 	public boolean isFileExist(String fileName) {
