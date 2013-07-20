@@ -3,6 +3,7 @@ package com.keita.pinganautoinsurance;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,11 +16,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class InsurancePhotoActivity extends Activity {
 	private Button camera_btn = null;
 	private String SDPath = null;
+	private ListView photo_list = null;
 	private File photoDir = null;
 	private boolean isSDExist = false;
 	@Override
@@ -28,6 +31,7 @@ public class InsurancePhotoActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_insurance_photo);
 		camera_btn = (Button) findViewById(R.id.camera_btn);
+		photo_list = (ListView)findViewById(R.id.photo_list);
 		/* 检测SD卡存在 */
 		if (Environment.getExternalStorageState().equals(
 				android.os.Environment.MEDIA_MOUNTED)) {
@@ -63,7 +67,9 @@ public class InsurancePhotoActivity extends Activity {
 				
 				Bundle bundle = data.getExtras();
 				Bitmap bitmap = (Bitmap)bundle.get("data");
-				File image = new File(photoDir.getAbsoluteFile()+"/1.jpg");
+				Date now = new Date();
+				String photo_name = Long.toString(now.getTime());
+				File image = new File(photoDir.getAbsoluteFile()+"/"+photo_name+".jpg");
 				FileOutputStream fos = null;
 				try {
 					 fos = new FileOutputStream(image);
@@ -81,8 +87,7 @@ public class InsurancePhotoActivity extends Activity {
 					}
 					
 				}
-				ImageView iv = (ImageView)findViewById(R.id.image_view);
-				iv.setImageBitmap(bitmap);
+				
 			}else{
 				Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT);
 			}
