@@ -17,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 public class InsurancePhotoActivity extends Activity {
@@ -25,6 +26,7 @@ public class InsurancePhotoActivity extends Activity {
 	private ListView photo_list = null;
 	private File photoDir = null;
 	private boolean isSDExist = false;
+	private SimpleAdapter adapter = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
