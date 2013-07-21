@@ -1,8 +1,10 @@
 package com.keita.painganautoinsurance.entity;
 
+import java.io.Serializable;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-public class TextImage {
+public class TextImage implements Serializable {
 	//照片评论
 	private String text;
 	//照片
