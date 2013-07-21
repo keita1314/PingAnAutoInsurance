@@ -14,6 +14,7 @@ import com.keita.painganautoinsurance.entity.TextImage;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -191,7 +192,7 @@ public class InsurancePhotoActivity extends Activity {
 			TextView textView = (TextView) itemView
 					.findViewById(R.id.list_item_text);
 			// 设置item的内容
-			imageView.setImageBitmap(currentTextImage.getImage());
+			imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentTextImage.getImage(), 100, 100));
 			textView.setText(currentTextImage.getText());
 
 			return itemView;
