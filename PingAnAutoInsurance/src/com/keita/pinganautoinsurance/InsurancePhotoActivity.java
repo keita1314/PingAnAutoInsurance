@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.keita.painganautoinsurance.entity.TextImage;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,12 +18,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class InsurancePhotoActivity extends Activity {
@@ -30,7 +36,9 @@ public class InsurancePhotoActivity extends Activity {
 	private ListView photo_list = null;
 	private File photoDir = null;
 	private boolean isSDExist = false;
-	private SimpleAdapter adapter = null;
+	private TextImageAdapter adapter = null;
+	private List<TextImage> list = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -38,6 +46,9 @@ public class InsurancePhotoActivity extends Activity {
 		setContentView(R.layout.activity_insurance_photo);
 		camera_btn = (Button) findViewById(R.id.camera_btn);
 		photo_list = (ListView)findViewById(R.id.photo_list);
+		
+		list = new ArrayList<TextImage>();
+		adapter = new TextImageAdapter(this,list);
 		
 		/* 检测SD卡存在 */
 		if (Environment.getExternalStorageState().equals(
@@ -75,6 +86,7 @@ public class InsurancePhotoActivity extends Activity {
 				Bundle bundle = data.getExtras();
 				Bitmap bitmap = (Bitmap)bundle.get("data");
 				Date now = new Date();
+				TextImage textImage = new TextImage();
 				String photo_name = Long.toString(now.getTime());
 				File image = new File(photoDir.getAbsoluteFile()+"/"+photo_name+".jpg");
 				FileOutputStream fos = null;
@@ -94,25 +106,66 @@ public class InsurancePhotoActivity extends Activity {
 					}
 					
 				}
-				
+			
+				textImage.setImage(bitmap);
+				textImage.setText("尚未评论");
+				list.add(textImage);
+				photo_list.setAdapter(adapter);
 			}else{
 				Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT);
 			}
 		}
 	}
 
-	private List<Map<String, Object>> getData(int imageNo,Bitmap bitmap) {
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(Integer.toString(imageNo), bitmap);
-		
-		list.add(map);
-		return list;
-	}
 	// 判断文件是否存在
 	public boolean isFileExist(String fileName) {
 		File file = new File(SDPath + fileName);
 		return file.exists();
 	}
+	//定义adapter
+		class TextImageAdapter extends BaseAdapter{
+			private Activity context;
+			private List<TextImage> list;
+			
+			public TextImageAdapter(Activity context,List<TextImage> list){
+				this.context = context;
+				this.list = list;
+			}
+		
+			@Override
+			public int getCount() {
+				// TODO Auto-generated method stub
+				return list.size();
+			}
+
+			@Override
+			public Object getItem(int position) {
+				// TODO Auto-generated method stub
+				return list.get(position);
+			}
+
+			@Override
+			public long getItemId(int position) {
+				// TODO Auto-generated method stub
+				return position;
+			}
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				// TODO Auto-generated method stub
+				LayoutInflater inflater = context.getLayoutInflater();
+				View itemView = inflater.inflate(R.layout.photo_listview_item, null);
+				TextImage currentTextImage = list.get(position);
+				
+				ImageView imageView = (ImageView)itemView.findViewById(R.id.list_item_image);
+				TextView textView = (TextView)itemView.findViewById(R.id.list_item_text);
+				//设置item的内容
+				imageView.setImageBitmap(currentTextImage.getImage());
+				textView.setText(currentTextImage.getText());
+				
+				return itemView;
+			}
+			
+		}
 }
