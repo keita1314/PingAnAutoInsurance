@@ -6,11 +6,12 @@
     android:background="#FFFFFF" >
      <include android:id="@+id/top_bar" 
         	layout="@layout/top_bar"/>
+ 
     <ImageView 
         android:id="@+id/photo_add_comment"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="15"
+      	android:layout_weight="15" 
         />
     <LinearLayout 
         android:layout_width="fill_parent"
