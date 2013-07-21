@@ -43,8 +43,8 @@ public class TextImage implements Parcelable {
 		public TextImage createFromParcel(Parcel source) {
 			// TODO Auto-generated method stub
 			TextImage textImage = new TextImage();
-			textImage.text = source.readString();
 			textImage.image = Bitmap.CREATOR.createFromParcel(source);
+			textImage.text = source.readString();
 			textImage.imagePath = source.readString();
 			return textImage;
 		}
@@ -66,9 +66,9 @@ public class TextImage implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel pracel, int flags) {
 		// TODO Auto-generated method stub
+		image.writeToParcel(pracel, 0);
 		pracel.writeString(text);
 		pracel.writeString(imagePath);
-		image.writeToParcel(pracel, 0);
 
 	}
 
