@@ -12,9 +12,13 @@ import java.util.Map;
 import com.keita.painganautoinsurance.entity.TextImage;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,6 +49,7 @@ public class InsurancePhotoActivity extends Activity {
 	private List<TextImage> textImage_list = null;
 	private String photo_abs_dir = null;
 	private int TAKE_PICTURE = 1;
+	private Uri imageUri = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +71,12 @@ public class InsurancePhotoActivity extends Activity {
 			public void onItemClick(AdapterView<?> adapterView, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-			
+
 				Intent intent = new Intent();
 				intent.setClass(InsurancePhotoActivity.this,
 						PhotoCommentActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putParcelable("TextImage",
-						textImage_list.get(position));
+				bundle.putParcelable("TextImage", textImage_list.get(position));
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
@@ -86,9 +90,9 @@ public class InsurancePhotoActivity extends Activity {
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 				Date now = new Date();
 				String photo_name = Long.toString(now.getTime());
-				photo_abs_dir = photoDir.getAbsoluteFile() + "/"
-						+ "image" + ".jpg";
-				Uri imageUri = Uri.fromFile(new File(photo_abs_dir));
+				photo_abs_dir = photoDir.getAbsoluteFile() + "/" + photo_name
+						+ ".jpg";
+				imageUri = Uri.fromFile(new File(photo_abs_dir));
 				intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 				startActivityForResult(intent, 1);
 			}
@@ -104,41 +108,76 @@ public class InsurancePhotoActivity extends Activity {
 
 			if (isSDExist) {
 				TextImage textImage = new TextImage();
-				/*Bundle bundle = data.getExtras();
-				Bitmap bitmap = (Bitmap) bundle.get("data");
-				Date now = new Date();
-				
-				String photo_name = Long.toString(now.getTime());
-				File image = new File(photoDir.getAbsoluteFile() + "/"
-						+ photo_name + ".jpg");
-				FileOutputStream fos = null;
+				/*
+				 * Bundle bundle = data.getExtras(); Bitmap bitmap = (Bitmap)
+				 * bundle.get("data"); Date now = new Date();
+				 * 
+				 * String photo_name = Long.toString(now.getTime()); File image
+				 * = new File(photoDir.getAbsoluteFile() + "/" + photo_name +
+				 * ".jpg"); FileOutputStream fos = null; try { fos = new
+				 * FileOutputStream(image);
+				 * bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos); }
+				 * catch (Exception e) { // TODO Auto-generated catch block
+				 * e.printStackTrace(); } finally { try { fos.flush();
+				 * fos.close(); } catch (Exception e) { // TODO Auto-generated
+				 * catch block e.printStackTrace(); }
+				 * 
+				 * }
+				 */
+
+				Bitmap bitmap = BitmapFactory.decodeFile(photo_abs_dir);
+				//解决手竖屏抓取照片会翻转90度的问题
+				int result = 0;
 				try {
-					fos = new FileOutputStream(image);
-					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+					ExifInterface exif = new ExifInterface(photo_abs_dir);
+					result = exif.getAttributeInt(
+							ExifInterface.TAG_ORIENTATION,
+							ExifInterface.ORIENTATION_UNDEFINED);
+					int rotate = 0;
+					switch (result) {
+					case ExifInterface.ORIENTATION_ROTATE_90:
+						rotate = 90;
+						break;
+					case ExifInterface.ORIENTATION_ROTATE_180:
+						rotate = 180;
+						break;
+					case ExifInterface.ORIENTATION_ROTATE_270:
+						rotate = 270;
+						break;
+					default:
+						break;
+					}
+					Log.v("orientation", "" + rotate);
+					if(rotate>0){
+						 Matrix martix = new Matrix();
+						 martix.setRotate(rotate);
+						Bitmap  rotateBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), martix, true);
+						if(rotateBitmap != null){
+							bitmap.recycle();
+							bitmap = rotateBitmap;
+						}
+						//重新把bitmap写到本地
+						File file = new File(photo_abs_dir);
+						FileOutputStream fos = new FileOutputStream(file);
+						bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+						fos.flush();
+						fos.close();
+					}
+						
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} finally {
-					try {
-						fos.flush();
-						fos.close();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				}
 
-				}*/
-				
-				Bitmap bitmap = BitmapFactory.decodeFile(photo_abs_dir);
-				Bitmap newBitmap = ThumbnailUtils.extractThumbnail(bitmap, 120, 120);
-				
+				Bitmap newBitmap = ThumbnailUtils.extractThumbnail(bitmap, 120,
+						120);
+				bitmap.recycle();
 				textImage.setImage(newBitmap);
 				textImage.setText("尚未评论");
 				textImage.setImagePath(photo_abs_dir);
 				textImage_list.add(textImage);
 				photo_listview.setAdapter(adapter);
-				
-				
+
 			} else {
 				Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT);
 			}

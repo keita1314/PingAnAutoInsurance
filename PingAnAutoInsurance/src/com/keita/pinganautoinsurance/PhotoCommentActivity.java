@@ -12,7 +12,7 @@ import android.widget.ImageView;
 public class PhotoCommentActivity extends Activity {
 	private ImageView imageView = null;
 	private TextImage textImage = null;
-
+	private Bitmap bitmap = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -24,10 +24,17 @@ public class PhotoCommentActivity extends Activity {
 		String imagePath = null;
 		if (textImage != null)
 			imagePath = textImage.getImagePath();
-		Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+		bitmap = BitmapFactory.decodeFile(imagePath);
 		imageView.setImageBitmap(bitmap);
 		
 
+	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if(bitmap!=null)
+			bitmap.recycle();
 	}
 
 }
