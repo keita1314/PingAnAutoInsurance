@@ -14,7 +14,9 @@ import com.keita.painganautoinsurance.entity.TextImage;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -41,6 +43,8 @@ public class InsurancePhotoActivity extends Activity {
 	private boolean isSDExist = false;
 	private TextImageAdapter adapter = null;
 	private List<TextImage> textImage_list = null;
+	private String photo_abs_dir = null;
+	private int TAKE_PICTURE = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,12 @@ public class InsurancePhotoActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				Date now = new Date();
+				String photo_name = Long.toString(now.getTime());
+				photo_abs_dir = photoDir.getAbsoluteFile() + "/"
+						+ "image" + ".jpg";
+				Uri imageUri = Uri.fromFile(new File(photo_abs_dir));
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 				startActivityForResult(intent, 1);
 			}
 
@@ -93,11 +103,11 @@ public class InsurancePhotoActivity extends Activity {
 		if (resultCode == Activity.RESULT_OK) {
 
 			if (isSDExist) {
-
-				Bundle bundle = data.getExtras();
+				TextImage textImage = new TextImage();
+				/*Bundle bundle = data.getExtras();
 				Bitmap bitmap = (Bitmap) bundle.get("data");
 				Date now = new Date();
-				TextImage textImage = new TextImage();
+				
 				String photo_name = Long.toString(now.getTime());
 				File image = new File(photoDir.getAbsoluteFile() + "/"
 						+ photo_name + ".jpg");
@@ -117,12 +127,18 @@ public class InsurancePhotoActivity extends Activity {
 						e.printStackTrace();
 					}
 
-				}
-
-				textImage.setImage(bitmap);
+				}*/
+				
+				Bitmap bitmap = BitmapFactory.decodeFile(photo_abs_dir);
+				Bitmap newBitmpa = ThumbnailUtils.extractThumbnail(bitmap, 120, 120);
+				bitmap.recycle();
+				textImage.setImage(newBitmpa);
 				textImage.setText("尚未评论");
+				textImage.setImagePath(photo_abs_dir);
 				textImage_list.add(textImage);
 				photo_listview.setAdapter(adapter);
+				
+				
 			} else {
 				Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT);
 			}
@@ -192,7 +208,7 @@ public class InsurancePhotoActivity extends Activity {
 			TextView textView = (TextView) itemView
 					.findViewById(R.id.list_item_text);
 			// 设置item的内容
-			imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentTextImage.getImage(), 100, 100));
+			imageView.setImageBitmap(currentTextImage.getImage());
 			textView.setText(currentTextImage.getText());
 
 			return itemView;
