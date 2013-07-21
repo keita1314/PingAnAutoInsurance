@@ -10,6 +10,16 @@ public class TextImage implements Parcelable {
 	private String text;
 	// 照片
 	private Bitmap image;
+	//照片路径
+	private String imagePath;
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
 
 	public String getText() {
 		return text;
@@ -35,6 +45,7 @@ public class TextImage implements Parcelable {
 			TextImage textImage = new TextImage();
 			textImage.text = source.readString();
 			textImage.image = Bitmap.CREATOR.createFromParcel(source);
+			textImage.imagePath = source.readString();
 			return textImage;
 		}
 
@@ -56,6 +67,7 @@ public class TextImage implements Parcelable {
 	public void writeToParcel(Parcel pracel, int flags) {
 		// TODO Auto-generated method stub
 		pracel.writeString(text);
+		pracel.writeString(imagePath);
 		image.writeToParcel(pracel, 0);
 
 	}
