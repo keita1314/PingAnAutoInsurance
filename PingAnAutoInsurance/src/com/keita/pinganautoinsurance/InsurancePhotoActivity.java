@@ -130,9 +130,9 @@ public class InsurancePhotoActivity extends Activity {
 				}*/
 				
 				Bitmap bitmap = BitmapFactory.decodeFile(photo_abs_dir);
-				Bitmap newBitmpa = ThumbnailUtils.extractThumbnail(bitmap, 120, 120);
-				bitmap.recycle();
-				textImage.setImage(newBitmpa);
+				Bitmap newBitmap = ThumbnailUtils.extractThumbnail(bitmap, 120, 120);
+				
+				textImage.setImage(newBitmap);
 				textImage.setText("尚未评论");
 				textImage.setImagePath(photo_abs_dir);
 				textImage_list.add(textImage);
