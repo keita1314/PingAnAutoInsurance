@@ -61,14 +61,15 @@ public class InsurancePhotoActivity extends Activity {
 			public void onItemClick(AdapterView<?> adapterView, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
+			
 				Intent intent = new Intent();
 				intent.setClass(InsurancePhotoActivity.this,
 						PhotoCommentActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putSerializable("TextImage",
+				bundle.putParcelable("TextImage",
 						textImage_list.get(position));
 				intent.putExtras(bundle);
-
+				startActivity(intent);
 			}
 
 		});
