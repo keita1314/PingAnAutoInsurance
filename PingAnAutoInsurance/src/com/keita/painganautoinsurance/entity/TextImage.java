@@ -12,7 +12,10 @@ public class TextImage implements Parcelable {
 	private Bitmap image;
 	//照片路径
 	private String imagePath;
-
+	//构造函数
+	public TextImage(){
+		setText("尚未评论");
+	}
 	public String getImagePath() {
 		return imagePath;
 	}
