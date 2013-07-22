@@ -50,6 +50,7 @@ public class InsurancePhotoActivity extends Activity {
 	private String photo_abs_dir = null;
 	private int TAKE_PICTURE = 1;
 	private Uri imageUri = null;
+	private int currentPosition = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,14 +72,14 @@ public class InsurancePhotoActivity extends Activity {
 			public void onItemClick(AdapterView<?> adapterView, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-
+				currentPosition = position;
 				Intent intent = new Intent();
 				intent.setClass(InsurancePhotoActivity.this,
 						PhotoCommentActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putParcelable("TextImage", textImage_list.get(position));
 				intent.putExtras(bundle);
-				startActivity(intent);
+				startActivityForResult(intent,2);
 			}
 
 		});
@@ -105,7 +106,7 @@ public class InsurancePhotoActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
-
+			
 			if (isSDExist) {
 				TextImage textImage = new TextImage();
 				/*
@@ -173,15 +174,25 @@ public class InsurancePhotoActivity extends Activity {
 						120);
 				bitmap.recycle();
 				textImage.setImage(newBitmap);
-				textImage.setText("尚未评论");
+			
 				textImage.setImagePath(photo_abs_dir);
 				textImage_list.add(textImage);
 				photo_listview.setAdapter(adapter);
-
+				
+				
 			} else {
 				Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT);
 			}
 		}
+		if(resultCode ==2 ){
+			Bundle bundle = data.getExtras();
+			String comment = bundle.getString("comment");
+			if(comment == null)
+				Log.v("comment", "comment is null");
+			textImage_list.get(currentPosition).setText(comment);
+			adapter.notifyDataSetChanged();
+		}
+		
 	}
 
 	// 检测SD卡存在
