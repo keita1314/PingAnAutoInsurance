@@ -79,7 +79,7 @@ public class InsurancePhotoActivity extends Activity {
 				Bundle bundle = new Bundle();
 				bundle.putParcelable("TextImage", textImage_list.get(position));
 				intent.putExtras(bundle);
-				startActivityForResult(intent,2);
+				startActivityForResult(intent, 2);
 			}
 
 		});
@@ -106,7 +106,7 @@ public class InsurancePhotoActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
-			
+
 			if (isSDExist) {
 				TextImage textImage = new TextImage();
 				/*
@@ -127,7 +127,7 @@ public class InsurancePhotoActivity extends Activity {
 				 */
 
 				Bitmap bitmap = BitmapFactory.decodeFile(photo_abs_dir);
-				//解决手竖屏抓取照片会翻转90度的问题
+				// 解决手竖屏抓取照片会翻转90度的问题
 				int result = 0;
 				try {
 					ExifInterface exif = new ExifInterface(photo_abs_dir);
@@ -149,22 +149,24 @@ public class InsurancePhotoActivity extends Activity {
 						break;
 					}
 					Log.v("orientation", "" + rotate);
-					if(rotate>0){
-						 Matrix martix = new Matrix();
-						 martix.setRotate(rotate);
-						Bitmap  rotateBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), martix, true);
-						if(rotateBitmap != null){
+					if (rotate > 0) {
+						Matrix martix = new Matrix();
+						martix.setRotate(rotate);
+						Bitmap rotateBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+								bitmap.getWidth(), bitmap.getHeight(), martix,
+								true);
+						if (rotateBitmap != null) {
 							bitmap.recycle();
 							bitmap = rotateBitmap;
 						}
-						//重新把bitmap写到本地
+						// 重新把bitmap写到本地
 						File file = new File(photo_abs_dir);
 						FileOutputStream fos = new FileOutputStream(file);
 						bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
 						fos.flush();
 						fos.close();
 					}
-						
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -174,25 +176,25 @@ public class InsurancePhotoActivity extends Activity {
 						120);
 				bitmap.recycle();
 				textImage.setImage(newBitmap);
-			
+
 				textImage.setImagePath(photo_abs_dir);
 				textImage_list.add(textImage);
 				photo_listview.setAdapter(adapter);
-				
-				
+
 			} else {
 				Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT);
 			}
 		}
-		if(resultCode ==2 ){
+		// 评论后的返回处理
+		if (resultCode == 2) {
 			Bundle bundle = data.getExtras();
 			String comment = bundle.getString("comment");
-			if(comment == null)
+			if (comment == null)
 				Log.v("comment", "comment is null");
 			textImage_list.get(currentPosition).setText(comment);
 			adapter.notifyDataSetChanged();
 		}
-		
+
 	}
 
 	// 检测SD卡存在
@@ -257,10 +259,12 @@ public class InsurancePhotoActivity extends Activity {
 					.findViewById(R.id.list_item_image);
 			TextView textView = (TextView) itemView
 					.findViewById(R.id.list_item_text);
+			TextView textView_time = (TextView) itemView
+					.findViewById(R.id.list_item_text_time);
 			// 设置item的内容
 			imageView.setImageBitmap(currentTextImage.getImage());
 			textView.setText(currentTextImage.getText());
-
+			textView_time.setText("X年X月X日X时X分");
 			return itemView;
 		}
 
