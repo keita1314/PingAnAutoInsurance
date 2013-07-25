@@ -40,7 +40,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class InsurancePhotoActivity extends Activity {
-	private Button camera_btn = null;
+	private Button cameraBtn = null;
+	private Button continueBtn = null;
 	private String SDPath = null;
 	private ListView photo_listview = null;
 	private File photoDir = null;
@@ -57,9 +58,9 @@ public class InsurancePhotoActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_insurance_photo);
-		camera_btn = (Button) findViewById(R.id.camera_btn);
+		cameraBtn = (Button) findViewById(R.id.camera_btn);
 		photo_listview = (ListView) findViewById(R.id.photo_list);
-
+		continueBtn = (Button)findViewById(R.id.continue_btn);
 		textImage_list = new ArrayList<TextImage>();
 		adapter = new TextImageAdapter(this, textImage_list);
 
@@ -84,7 +85,7 @@ public class InsurancePhotoActivity extends Activity {
 
 		});
 		// 拍照按钮的监听
-		camera_btn.setOnClickListener(new OnClickListener() {
+		cameraBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -98,6 +99,18 @@ public class InsurancePhotoActivity extends Activity {
 				startActivityForResult(intent, 1);
 			}
 
+		});
+		//下一步按钮的监听
+		continueBtn.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+				intent.setClass(InsurancePhotoActivity.this, InsuranceTextActivity.class);
+				
+			}
+			
 		});
 	}
 
