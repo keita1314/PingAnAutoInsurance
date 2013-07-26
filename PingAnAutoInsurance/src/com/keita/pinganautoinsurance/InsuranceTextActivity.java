@@ -2,6 +2,8 @@ package com.keita.pinganautoinsurance;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -37,6 +39,15 @@ public class InsuranceTextActivity extends Activity {
 		caseThirdCarType = (EditText)findViewById(R.id.case_third_car_type);
 		
 		continueBtn = (Button)findViewById(R.id.continue_btn);
+		continueBtn.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 		
 	}
 
