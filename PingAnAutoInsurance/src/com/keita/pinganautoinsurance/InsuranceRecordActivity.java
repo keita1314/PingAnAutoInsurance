@@ -35,12 +35,24 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class InsuranceRecordActivity extends Activity {
+	private EditText hurtNum = null;
+	private EditText deadNum = null;
+	private EditText accidentDetail = null;
+	private Spinner caseReason = null;
+	private Spinner accidentReason = null;
+	
 	private Button record_btn = null;
 	private Button record_stop_btn = null;
 	private Button record_play_btn = null;
@@ -48,6 +60,16 @@ public class InsuranceRecordActivity extends Activity {
 	Toast recording_toast = null;
 	ImageView record_animate = null;
 	LinearLayout toast_view = null;
+	
+	private ArrayAdapter<String> caseAdapter = null;
+	private ArrayAdapter<String> accidentAdapter = null;
+	
+	private String hurtNumStr = "0";
+	private String deadNumStr = "0";
+	
+	private String caseReasonStr = "";
+	private String accidentReasonStr = "";
+	
 	private AudioRecord ar;
 	private int bs;
 	private static int SAMPLE_RATE_IN_HZ = 8000;
@@ -68,6 +90,62 @@ public class InsuranceRecordActivity extends Activity {
 		record_btn = (Button) findViewById(R.id.record_btn);
 		record_stop_btn = (Button) findViewById(R.id.record_stop_btn);
 		record_play_btn = (Button)findViewById(R.id.record_play_btn);
+		
+		hurtNum = (EditText) findViewById(R.id.hurt_num);
+		deadNum = (EditText) findViewById(R.id.dead_num);
+		accidentDetail = (EditText) findViewById(R.id.accident_detail);
+		
+		final String[] caseReasonArray = {"碰撞","倾覆","火灾","爆炸","自燃","盗抢","外界物体坠落",
+									"外界物体倒塌","雷击","暴风","暴雨","洪水","雹灾","玻璃延烧",
+									"行驶中玻璃爆裂","被砸","其它"};
+		final String[] accidentReasonArray = {"制动失灵","转向失灵","其它机械故障","疲劳驾驶","闯红灯",
+										"逆向行驶","安全距离不够","超速行驶","违章装载","违章并线",
+										"其它违章行驶","忽大意、措施失当","其它"};
+		//设置adapter
+		caseAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,caseReasonArray);
+		accidentAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,accidentReasonArray);
+		caseAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+		accidentAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+		
+		caseReason = (Spinner) findViewById(R.id.case_reason);
+		accidentReason = (Spinner) findViewById(R.id.accident_reason);
+		
+		caseReason.setAdapter(caseAdapter);
+		accidentReason.setAdapter(accidentAdapter);
+		//出险原因Spinner监听
+		caseReason.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				// TODO Auto-generated method stub
+				caseReasonStr = caseReasonArray[arg2];
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		//事故原因Spinner事件监听
+		accidentReason.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				// TODO Auto-generated method stub
+				accidentReasonStr = accidentReasonArray[arg2];
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 		/* 检测SD卡存在 */
 		if (Environment.getExternalStorageState().equals(
 				android.os.Environment.MEDIA_MOUNTED)) {
