@@ -21,7 +21,7 @@ public class InsuranceActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
-				intent.setClass(InsuranceActivity.this,InsuranceNextActivity.class);
+				intent.setClass(InsuranceActivity.this,InsuranceRecordActivity.class);
 				startActivity(intent);
 				
 				

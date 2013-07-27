@@ -3,163 +3,179 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF" >
-    
-<LinearLayout 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-     >
-    <include android:id="@+id/top_bar" 
-        	layout="@layout/top_bar"/>
+
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="3dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginRight="3dp"
-        android:layout_marginBottom="3dp"
-         >
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:numeric="integer"
-        android:text="报案号"
-        />
-    <EditText 
-        android:id="@+id/case_no"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-	<TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="被保险人"
-        />
-    <EditText 
-        android:id="@+id/case_owner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="驾驶员"
-        />
-    <EditText 
-        android:id="@+id/case_driver"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <LinearLayout 
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-     <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-       android:textColor="#000000"
-        android:text="被保险人与驾驶员关系"
-       	android:layout_weight="0"
-        />
-    <Spinner
-        android:id="@+id/relationship" 
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_weight="1"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <include
+            android:id="@+id/top_bar"
+            layout="@layout/top_bar" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="3dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="报案号"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_no"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:numeric="integer" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="被保险人"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_owner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="驾驶员"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_driver"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="被保险人与驾驶员关系"
+                    android:textColor="#000000" />
+
+                <Spinner
+                    android:id="@+id/relationship"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="被保险人电话"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_owner_phone"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:numeric="integer" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="驾驶员电话"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_driver_phone"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:numeric="integer" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="驾驶证号"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_driver_licence"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:numeric="integer" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="车牌号码"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_car_no"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="车型"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_car_type"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VIN码"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_car_type"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="三者车牌"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_third_car_no"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="三者车型"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_third_car_type"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/continue_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="下一步" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-         android:numeric="integer"
-        android:text="被保险人电话"
-        />
-    <EditText 
-        android:id="@+id/case_owner_phone"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-      <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-       android:textColor="#000000"
-         android:numeric="integer"
-        android:text="驾驶员电话"
-        />
-    <EditText 
-        android:id="@+id/case_driver_phone"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-         android:numeric="integer"
-        android:text="驾驶证号"
-        />
-    <EditText 
-        android:id="@+id/case_driver_licence"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="车牌号码"
-        />
-    <EditText 
-        android:id="@+id/case_car_no"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="车型"
-        />
-    <EditText 
-        android:id="@+id/case_car_type"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="VIN码"
-        />
-    <EditText 
-        android:id="@+id/case_car_type"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="三者车牌"
-        />
-    <EditText 
-        android:id="@+id/case_third_car_no"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="三者车型"
-        />
-    <EditText 
-        android:id="@+id/case_third_car_type"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    
-   	<LinearLayout 
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
-    <Button
-        android:id="@+id/continue_btn" 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="下一步"/>
-</LinearLayout>
-	</LinearLayout> 
-</LinearLayout>
+
 </ScrollView>
