@@ -13,7 +13,7 @@ public class InsuranceActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_insurance);
+		setContentView(R.layout.activity_insurance_text);
 		continue_btn =(Button) findViewById(R.id.continue_btn);
 		continue_btn.setOnClickListener(new OnClickListener(){
 

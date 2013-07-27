@@ -42,7 +42,7 @@ public class InsuranceTextActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_insurance);
+		setContentView(R.layout.activity_insurance_text);
 		caseNo = (EditText) findViewById(R.id.case_no);
 		caseOwner = (EditText) findViewById(R.id.case_owner);
 		caseDriver = (EditText) findViewById(R.id.case_driver);
