@@ -35,6 +35,7 @@
         <activity android:name="com.keita.pinganautoinsurance.InsurancePhotoActivity" />
         <activity android:name="com.keita.pinganautoinsurance.PhotoCommentActivity" />
         <activity android:name="com.keita.pinganautoinsurance.InsuranceLocationActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.InsuranceTextActivity" />
     </application>
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -42,7 +43,7 @@
     <uses-permission android:name="android.permission.STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <!-- 访问精确位置的权限 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION">
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" >
     </uses-permission>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- 访问网络状态的权限 -->
@@ -63,4 +64,5 @@
     </uses-permission>
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
 </manifest>
