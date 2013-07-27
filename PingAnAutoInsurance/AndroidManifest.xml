@@ -30,7 +30,7 @@
         </activity>
         <activity android:name="com.keita.pinganautoinsurance.InsuranceActivity" >
         </activity>
-        <activity android:name="com.keita.pinganautoinsurance.InsuranceNextActivity" >
+        <activity android:name="com.keita.pinganautoinsurance.InsuranceRecordActivity" >
         </activity>
         <activity android:name="com.keita.pinganautoinsurance.InsurancePhotoActivity" />
         <activity android:name="com.keita.pinganautoinsurance.PhotoCommentActivity" />

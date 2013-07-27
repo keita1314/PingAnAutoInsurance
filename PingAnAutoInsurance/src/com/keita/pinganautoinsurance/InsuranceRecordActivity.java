@@ -40,7 +40,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class InsuranceNextActivity extends Activity {
+public class InsuranceRecordActivity extends Activity {
 	private Button record_btn = null;
 	private Button record_stop_btn = null;
 	private Button record_play_btn = null;
@@ -64,7 +64,7 @@ public class InsuranceNextActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_insurance_next);
+		setContentView(R.layout.activity_insurance_record);
 		record_btn = (Button) findViewById(R.id.record_btn);
 		record_stop_btn = (Button) findViewById(R.id.record_stop_btn);
 		record_play_btn = (Button)findViewById(R.id.record_play_btn);
