@@ -220,9 +220,11 @@ public class InsuranceNextActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		timer.cancel();
+		if(timer!=null)
+			timer.cancel();
 		try {
-			dos.close();
+			if(dos != null)
+				dos.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

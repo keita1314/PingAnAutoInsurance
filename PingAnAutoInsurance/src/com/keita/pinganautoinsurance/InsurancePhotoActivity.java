@@ -108,6 +108,8 @@ public class InsurancePhotoActivity extends Activity {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
 				intent.setClass(InsurancePhotoActivity.this, InsuranceTextActivity.class);
+				startActivity(intent);
+				InsurancePhotoActivity.this.finish();
 				
 			}
 			
