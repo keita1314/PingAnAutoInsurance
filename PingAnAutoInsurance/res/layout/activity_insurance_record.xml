@@ -45,9 +45,9 @@
            android:layout_width="wrap_content"
            android:textColor="#000000"
            android:text="出险原因"/>
-          <Spinner
+          <com.keita.pinganautoinsurance.mywidget.ComboEditText
               android:id="@+id/case_reason"
-              android:layout_width="wrap_content"
+              android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               />
           <TextView 
@@ -55,9 +55,9 @@
            android:layout_width="wrap_content"
            android:textColor="#000000"
            android:text="事故原因"/>
-          <Spinner
+          <com.keita.pinganautoinsurance.mywidget.ComboEditText
               android:id="@+id/accident_reason"
-              android:layout_width="wrap_content"
+              android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               />
           <TextView 
