@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.keita.pinganautoinsurance.mywidget.ComboEditText;
+
 import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
@@ -50,8 +52,8 @@ public class InsuranceRecordActivity extends Activity {
 	private EditText hurtNum = null;
 	private EditText deadNum = null;
 	private EditText accidentDetail = null;
-	private Spinner caseReason = null;
-	private Spinner accidentReason = null;
+	private ComboEditText caseReason = null;
+	private ComboEditText accidentReason = null;
 	
 	private Button record_btn = null;
 	private Button record_stop_btn = null;
@@ -107,13 +109,13 @@ public class InsuranceRecordActivity extends Activity {
 		caseAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		accidentAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		
-		caseReason = (Spinner) findViewById(R.id.case_reason);
-		accidentReason = (Spinner) findViewById(R.id.accident_reason);
+		caseReason = (ComboEditText) findViewById(R.id.case_reason);
+		accidentReason = (ComboEditText) findViewById(R.id.accident_reason);
 		
-		caseReason.setAdapter(caseAdapter);
-		accidentReason.setAdapter(accidentAdapter);
+		caseReason.setAdapter(caseReasonArray);
+		accidentReason.setAdapter(accidentReasonArray);
 		//出险原因Spinner监听
-		caseReason.setOnItemSelectedListener(new OnItemSelectedListener(){
+		/*caseReason.setOnItemSelectedListener(new OnItemSelectedListener(){
 
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
@@ -128,9 +130,9 @@ public class InsuranceRecordActivity extends Activity {
 				
 			}
 			
-		});
+		});*/
 		//事故原因Spinner事件监听
-		accidentReason.setOnItemSelectedListener(new OnItemSelectedListener(){
+		/*accidentReason.setOnItemSelectedListener(new OnItemSelectedListener(){
 
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
@@ -145,7 +147,7 @@ public class InsuranceRecordActivity extends Activity {
 				
 			}
 			
-		});
+		});*/
 		/* 检测SD卡存在 */
 		if (Environment.getExternalStorageState().equals(
 				android.os.Environment.MEDIA_MOUNTED)) {
@@ -384,6 +386,7 @@ public class InsuranceRecordActivity extends Activity {
 		File file = new File(SDPath + fileName);
 		return file.exists();
 	}
+	//异步播放
 	class PlayAsyncTask extends AsyncTask<Void,Void,Void>{
 
 		@Override
