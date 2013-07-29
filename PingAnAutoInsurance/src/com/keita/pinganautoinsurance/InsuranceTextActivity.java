@@ -1,6 +1,7 @@
 package com.keita.pinganautoinsurance;
 
 import com.keita.painganautoinsurance.entity.TextImage;
+import com.keita.pinganautoinsurance.mywidget.ComboEditText;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,9 +24,9 @@ public class InsuranceTextActivity extends Activity {
 	private EditText caseOwnerPhone = null;
 	private EditText caseDriverPhone = null;
 	private EditText caseDriverLicence = null;
-	private EditText caseCarNo = null;
+	private ComboEditText caseCarNo = null;
 	private EditText caseCarType = null;
-	private EditText caseThirdCarNo = null;
+	private ComboEditText caseThirdCarNo = null;
 	private EditText caseThirdCarType = null;
 	private Button continueBtn = null;
 	private ArrayAdapter<String> adapter = null;
@@ -54,15 +55,40 @@ public class InsuranceTextActivity extends Activity {
 		caseOwnerPhone = (EditText) findViewById(R.id.case_owner_phone);
 		caseDriverPhone = (EditText) findViewById(R.id.case_driver_phone);
 		caseDriverLicence = (EditText) findViewById(R.id.case_driver_licence);
-		caseCarNo = (EditText) findViewById(R.id.case_car_no);
+		caseCarNo = (ComboEditText) findViewById(R.id.case_car_no);
 		caseCarType = (EditText) findViewById(R.id.case_car_type);
-		caseThirdCarNo = (EditText) findViewById(R.id.case_third_car_no);
+		caseThirdCarNo = (ComboEditText) findViewById(R.id.case_third_car_no);
 		caseThirdCarType = (EditText) findViewById(R.id.case_third_car_type);
 		continueBtn = (Button) findViewById(R.id.continue_btn);
 		final String[] relationArray = { "本人", "非本人" };
 		relationShip = (Spinner) findViewById(R.id.relationship);
-
+		//车牌数据源
+		final String[] carNoArray={"粤","京","津","沪","渝","冀","豫","云","辽","黑","湘","皖",
+									"鲁","新","苏","浙","赣","鄂","桂","甘"};
+		
 		// 设置adapter
+		caseCarNo.setAdapter(carNoArray);
+		caseCarNo.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				caseCarNoStr = caseCarNo.getText();
+				
+			}
+			
+		});
+		
+		caseThirdCarNo.setAdapter(carNoArray);
+		caseThirdCarNo.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				caseThirdCarNoStr = caseThirdCarNo.getText();
+			}
+			
+		});
 		adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, relationArray);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

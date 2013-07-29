@@ -58,6 +58,7 @@ public class InsuranceRecordActivity extends Activity {
 	private Button record_btn = null;
 	private Button record_stop_btn = null;
 	private Button record_play_btn = null;
+	private Button save_case_btn = null;
 	private Timer timer = null;
 	Toast recording_toast = null;
 	ImageView record_animate = null;
@@ -92,7 +93,7 @@ public class InsuranceRecordActivity extends Activity {
 		record_btn = (Button) findViewById(R.id.record_btn);
 		record_stop_btn = (Button) findViewById(R.id.record_stop_btn);
 		record_play_btn = (Button)findViewById(R.id.record_play_btn);
-		
+		save_case_btn = (Button)findViewById(R.id.save_case_btn);
 		hurtNum = (EditText) findViewById(R.id.hurt_num);
 		deadNum = (EditText) findViewById(R.id.dead_num);
 		accidentDetail = (EditText) findViewById(R.id.accident_detail);
@@ -280,6 +281,7 @@ public class InsuranceRecordActivity extends Activity {
 			}
 
 		});
+		//录音播放按钮监听
 		record_play_btn.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -295,7 +297,20 @@ public class InsuranceRecordActivity extends Activity {
 			}
 			
 		});
+		//保存案件按钮
+		save_case_btn.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				System.out.println(caseReason.getText());
+				System.out.println(accidentReason.getText());
+			}
+			
+		});
 	}
+	
+		
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
@@ -311,7 +326,7 @@ public class InsuranceRecordActivity extends Activity {
 		}
 		Log.v("test", "destory");
 	}
-	//根据声音大小 更新UI
+	//根据声音大小 更新UI带动画效果
 	private Handler handler = new Handler(){
 
 		@Override

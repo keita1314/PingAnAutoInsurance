@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,7 +74,7 @@ public class InsuranceLocationActivity extends Activity {
 	boolean isLocationClientStop = false;
 
 	// 定位地址
-	private TextView locationAddress;
+	private EditText locationAddress;
 	String address = null;
 	//下一步按钮
 	private Button continueBtn = null;
@@ -85,7 +86,7 @@ public class InsuranceLocationActivity extends Activity {
 		mBMapMan.init("2F64E03AC6D24CC96C4713F921D8B653D2FC8747", null);
 		setContentView(R.layout.activity_insurance_location_gps);
 		
-		locationAddress = (TextView) findViewById(R.id.location_text);
+		locationAddress = (EditText) findViewById(R.id.location_text);
 		requestLocButton = (Button) findViewById(R.id.button1);
 		continueBtn = (Button)findViewById(R.id.continue_btn);
 		OnClickListener btnClickListener = new OnClickListener() {
@@ -133,7 +134,7 @@ public class InsuranceLocationActivity extends Activity {
 		LocationClientOption option = new LocationClientOption();
 		option.setOpenGps(true);// 打开gps
 		option.setCoorType("bd09ll"); // 设置坐标类型
-		option.setScanSpan(5000);
+		option.setScanSpan(30000);
 		option.setAddrType("all");
 		//option.setPriority(LocationClientOption.NetWorkFirst);
 		mLocClient.setLocOption(option);
