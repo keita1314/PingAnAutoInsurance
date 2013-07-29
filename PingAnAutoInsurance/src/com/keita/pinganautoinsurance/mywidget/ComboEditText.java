@@ -3,18 +3,24 @@ package com.keita.pinganautoinsurance.mywidget;
 /*
  * 可编辑可选择的输入框
  */
+import com.keita.pinganautoinsurance.R;
+
 import android.content.Context;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
-public class ComboEditText extends LinearLayout {
+public class ComboEditText extends RelativeLayout {
 	private AutoCompleteTextView autoTextView;
-	private ImageButton button;
+	private Button button;
+	private ImageView imageView;
 
 	public ComboEditText(Context context) {
 		super(context);
@@ -27,7 +33,7 @@ public class ComboEditText extends LinearLayout {
 	}
 
 	private void createChildControls(Context context) {
-		this.setOrientation(HORIZONTAL);
+
 		this.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.WRAP_CONTENT));
 		autoTextView = new AutoCompleteTextView(context);
@@ -38,12 +44,18 @@ public class ComboEditText extends LinearLayout {
 				| InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE
 				| InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
 		autoTextView.setRawInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-		this.addView(autoTextView, new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT, 1));
-		button = new ImageButton(context);
-		button.setImageResource(android.R.drawable.arrow_down_float);
+		autoTextView.setBackgroundResource(R.drawable.edit_background);
+		this.addView(autoTextView, new LayoutParams(LayoutParams.FILL_PARENT,
+				LayoutParams.WRAP_CONTENT));
+		LayoutParams lp = new RelativeLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		//lp.addRule(RelativeLayout.ALIGN_RIGHT,autoTextView.getId());
+		lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+		lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+		lp.addRule(RelativeLayout.ALIGN_RIGHT,autoTextView.getId());
+		button = new Button(context);
+		button.setBackgroundResource(R.drawable.arrow_down);
 		button.setOnClickListener(new OnClickListener() {
-		
 
 			@Override
 			public void onClick(View v) {
@@ -51,17 +63,20 @@ public class ComboEditText extends LinearLayout {
 				autoTextView.showDropDown();
 			}
 		});
-		this.addView(button, new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT));
+		
+		this.addView(button,lp);
+
 	}
-	
-	/* 设置数据源
+
+	/*
+	 * 设置数据源
 	 */
 	public void setAdapter(String[] column) {
 		ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
 				this.getContext(), android.R.layout.simple_dropdown_item_1line,
 				column);
 		autoTextView.setAdapter(mAdapter);
+
 	}
 
 	/**
