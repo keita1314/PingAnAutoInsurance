@@ -1,8 +1,11 @@
 package com.keita.pinganautoinsurance;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,8 +14,11 @@ import java.util.Map;
 
 import com.keita.painganautoinsurance.entity.TextImage;
 
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -27,10 +33,13 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -40,6 +49,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class InsurancePhotoActivity extends Activity {
+	
+
+
 	private Button cameraBtn = null;
 	private Button continueBtn = null;
 	private String SDPath = null;
@@ -84,8 +96,41 @@ public class InsurancePhotoActivity extends Activity {
 			}
 
 		});
+		//照片列表长按事件的监听 长按可删除当前照片
+		photo_listview.setOnItemLongClickListener(new OnItemLongClickListener(){
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				final int pos = position;
+				System.out.println(position);
+				new AlertDialog.Builder(InsurancePhotoActivity.this)
+				.setTitle("删除照片")
+				.setMessage("你确定要删除当前照片")
+				.setNegativeButton("取消", null)
+				.setPositiveButton("确定", new OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						File file = new File(textImage_list.get(pos).getImagePath());
+						if(file.exists())
+							file.delete();
+						textImage_list.get(pos).recycle();
+						textImage_list.remove(pos);
+						adapter.notifyDataSetChanged();
+						
+					}
+		
+					
+				}).show();
+				return false;
+			}
+			
+		});
 		// 拍照按钮的监听
-		cameraBtn.setOnClickListener(new OnClickListener() {
+		cameraBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -101,7 +146,7 @@ public class InsurancePhotoActivity extends Activity {
 
 		});
 		//下一步按钮的监听
-		continueBtn.setOnClickListener(new OnClickListener(){
+		continueBtn.setOnClickListener(new View.OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -124,32 +169,28 @@ public class InsurancePhotoActivity extends Activity {
 
 			if (isSDExist) {
 				TextImage textImage = new TextImage();
-				/*
-				 * Bundle bundle = data.getExtras(); Bitmap bitmap = (Bitmap)
-				 * bundle.get("data"); Date now = new Date();
-				 * 
-				 * String photo_name = Long.toString(now.getTime()); File image
-				 * = new File(photoDir.getAbsoluteFile() + "/" + photo_name +
-				 * ".jpg"); FileOutputStream fos = null; try { fos = new
-				 * FileOutputStream(image);
-				 * bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos); }
-				 * catch (Exception e) { // TODO Auto-generated catch block
-				 * e.printStackTrace(); } finally { try { fos.flush();
-				 * fos.close(); } catch (Exception e) { // TODO Auto-generated
-				 * catch block e.printStackTrace(); }
-				 * 
-				 * }
-				 */
-
-				Bitmap bitmap = BitmapFactory.decodeFile(photo_abs_dir);
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inSampleSize = 2;
+				InputStream is = null;
+				Bitmap bitmap = null;
+				try {
+					 is = new FileInputStream(photo_abs_dir);
+					 bitmap = BitmapFactory.decodeStream(is,null,options);
+					 is.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				// 解决手竖屏抓取照片会翻转90度的问题
 				int result = 0;
 				try {
+					int rotate = 0;
 					ExifInterface exif = new ExifInterface(photo_abs_dir);
 					result = exif.getAttributeInt(
 							ExifInterface.TAG_ORIENTATION,
 							ExifInterface.ORIENTATION_UNDEFINED);
-					int rotate = 0;
+					
 					switch (result) {
 					case ExifInterface.ORIENTATION_ROTATE_90:
 						rotate = 90;
@@ -190,8 +231,8 @@ public class InsurancePhotoActivity extends Activity {
 				Bitmap newBitmap = ThumbnailUtils.extractThumbnail(bitmap, 120,
 						120);
 				bitmap.recycle();
+				bitmap = null;
 				textImage.setImage(newBitmap);
-
 				textImage.setImagePath(photo_abs_dir);
 				textImage_list.add(textImage);
 				photo_listview.setAdapter(adapter);
@@ -211,6 +252,14 @@ public class InsurancePhotoActivity extends Activity {
 		}
 
 	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		for(TextImage ti:textImage_list)
+			ti.recycle();
+	}
+
 
 	// 检测SD卡存在
 	public void isSDExist() {
@@ -229,10 +278,6 @@ public class InsurancePhotoActivity extends Activity {
 
 	}
 
-	/*
-	 * // 判断文件是否存在 public boolean isFileExist(String fileName) { File file = new
-	 * File(SDPath + fileName); return file.exists(); }
-	 */
 
 	// 定义adapter
 	class TextImageAdapter extends BaseAdapter {

@@ -1,5 +1,9 @@
 package com.keita.pinganautoinsurance;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import com.keita.painganautoinsurance.entity.TextImage;
 
 import android.app.Activity;
@@ -38,7 +42,16 @@ public class PhotoCommentActivity extends Activity {
 		String imagePath = null;
 		if (textImage != null)
 			imagePath = textImage.getImagePath();
-		bitmap = BitmapFactory.decodeFile(imagePath);
+		InputStream is = null;
+		try {
+			 is = new FileInputStream(imagePath);
+			 bitmap = BitmapFactory.decodeStream(is);
+			 is.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//bitmap = BitmapFactory.decodeFile(imagePath);
 		imageView.setImageBitmap(bitmap);
 		textView.setText(textImage.getText());
 		resultIntent = new Intent();
