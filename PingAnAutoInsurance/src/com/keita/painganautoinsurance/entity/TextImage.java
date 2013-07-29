@@ -74,5 +74,9 @@ public class TextImage implements Parcelable {
 		pracel.writeString(imagePath);
 
 	}
+	public void recycle(){
+		if(image != null && !image.isRecycled())
+			image.recycle();
+	}
 
 }
