@@ -43,9 +43,11 @@ public class PhotoCommentActivity extends Activity {
 		if (textImage != null)
 			imagePath = textImage.getImagePath();
 		InputStream is = null;
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inSampleSize = 2;
 		try {
 			 is = new FileInputStream(imagePath);
-			 bitmap = BitmapFactory.decodeStream(is);
+			 bitmap = BitmapFactory.decodeStream(is,null,options);
 			 is.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

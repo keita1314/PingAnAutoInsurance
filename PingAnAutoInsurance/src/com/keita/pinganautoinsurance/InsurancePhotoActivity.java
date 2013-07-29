@@ -14,7 +14,6 @@ import java.util.Map;
 
 import com.keita.painganautoinsurance.entity.TextImage;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -49,8 +48,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class InsurancePhotoActivity extends Activity {
-	
-
 
 	private Button cameraBtn = null;
 	private Button continueBtn = null;
@@ -64,6 +61,7 @@ public class InsurancePhotoActivity extends Activity {
 	private int TAKE_PICTURE = 1;
 	private Uri imageUri = null;
 	private int currentPosition = 0;
+	private int photoSumNum = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +70,7 @@ public class InsurancePhotoActivity extends Activity {
 		setContentView(R.layout.activity_insurance_photo);
 		cameraBtn = (Button) findViewById(R.id.camera_btn);
 		photo_listview = (ListView) findViewById(R.id.photo_list);
-		continueBtn = (Button)findViewById(R.id.continue_btn);
+		continueBtn = (Button) findViewById(R.id.continue_btn);
 		textImage_list = new ArrayList<TextImage>();
 		adapter = new TextImageAdapter(this, textImage_list);
 
@@ -96,68 +94,76 @@ public class InsurancePhotoActivity extends Activity {
 			}
 
 		});
-		//照片列表长按事件的监听 长按可删除当前照片
-		photo_listview.setOnItemLongClickListener(new OnItemLongClickListener(){
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				final int pos = position;
-				System.out.println(position);
-				new AlertDialog.Builder(InsurancePhotoActivity.this)
-				.setTitle("删除照片")
-				.setMessage("你确定要删除当前照片")
-				.setNegativeButton("取消", null)
-				.setPositiveButton("确定", new OnClickListener(){
+		// 照片列表长按事件的监听 长按可删除当前照片
+		photo_listview
+				.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public boolean onItemLongClick(AdapterView<?> arg0,
+							View arg1, int position, long id) {
 						// TODO Auto-generated method stub
-						File file = new File(textImage_list.get(pos).getImagePath());
-						if(file.exists())
-							file.delete();
-						textImage_list.get(pos).recycle();
-						textImage_list.remove(pos);
-						adapter.notifyDataSetChanged();
-						
+						final int pos = position;
+						System.out.println(position);
+						new AlertDialog.Builder(InsurancePhotoActivity.this)
+								.setTitle("删除照片").setMessage("你确定要删除当前照片")
+								.setNegativeButton("取消", null)
+								.setPositiveButton("确定", new OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// TODO Auto-generated method stub
+										File file = new File(textImage_list
+												.get(pos).getImagePath());
+										if (file.exists())
+											file.delete();
+										textImage_list.get(pos).recycle();
+										textImage_list.remove(pos);
+										photoSumNum--;
+										adapter.notifyDataSetChanged();
+
+									}
+
+								}).show();
+						return false;
 					}
-		
-					
-				}).show();
-				return false;
-			}
-			
-		});
+
+				});
 		// 拍照按钮的监听
 		cameraBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				Date now = new Date();
-				String photo_name = Long.toString(now.getTime());
-				photo_abs_dir = photoDir.getAbsoluteFile() + "/" + photo_name
-						+ ".jpg";
-				imageUri = Uri.fromFile(new File(photo_abs_dir));
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-				startActivityForResult(intent, 1);
+				if (photoSumNum <= 5) {
+					photoSumNum++;
+					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+					Date now = new Date();
+					String photo_name = Long.toString(now.getTime());
+					photo_abs_dir = photoDir.getAbsoluteFile() + "/"
+							+ photo_name + ".jpg";
+					imageUri = Uri.fromFile(new File(photo_abs_dir));
+					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+					startActivityForResult(intent, 1);
+				} else
+					Toast.makeText(InsurancePhotoActivity.this, "最多只能存储5张图片",
+							Toast.LENGTH_SHORT).show();
 			}
 
 		});
-		//下一步按钮的监听
-		continueBtn.setOnClickListener(new View.OnClickListener(){
+		// 下一步按钮的监听
+		continueBtn.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
-				intent.setClass(InsurancePhotoActivity.this, InsuranceTextActivity.class);
+				intent.setClass(InsurancePhotoActivity.this,
+						InsuranceTextActivity.class);
 				startActivity(intent);
 				InsurancePhotoActivity.this.finish();
-				
+
 			}
-			
+
 		});
 	}
 
@@ -174,14 +180,14 @@ public class InsurancePhotoActivity extends Activity {
 				InputStream is = null;
 				Bitmap bitmap = null;
 				try {
-					 is = new FileInputStream(photo_abs_dir);
-					 bitmap = BitmapFactory.decodeStream(is,null,options);
-					 is.close();
+					is = new FileInputStream(photo_abs_dir);
+					bitmap = BitmapFactory.decodeStream(is, null, options);
+					is.close();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				// 解决手竖屏抓取照片会翻转90度的问题
 				int result = 0;
 				try {
@@ -190,7 +196,7 @@ public class InsurancePhotoActivity extends Activity {
 					result = exif.getAttributeInt(
 							ExifInterface.TAG_ORIENTATION,
 							ExifInterface.ORIENTATION_UNDEFINED);
-					
+
 					switch (result) {
 					case ExifInterface.ORIENTATION_ROTATE_90:
 						rotate = 90;
@@ -238,7 +244,7 @@ public class InsurancePhotoActivity extends Activity {
 				photo_listview.setAdapter(adapter);
 
 			} else {
-				Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT);
+				Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT).show();
 			}
 		}
 		// 评论后的返回处理
@@ -252,14 +258,14 @@ public class InsurancePhotoActivity extends Activity {
 		}
 
 	}
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		for(TextImage ti:textImage_list)
+		for (TextImage ti : textImage_list)
 			ti.recycle();
 	}
-
 
 	// 检测SD卡存在
 	public void isSDExist() {
@@ -277,7 +283,6 @@ public class InsurancePhotoActivity extends Activity {
 			isSDExist = false;
 
 	}
-
 
 	// 定义adapter
 	class TextImageAdapter extends BaseAdapter {
