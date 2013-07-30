@@ -1,5 +1,7 @@
 package com.keita.pinganautoinsurance;
 
+import com.keita.pinganautoinsurance.database.DBHelper;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -18,7 +20,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+   	 	
         create_btn = (Button)findViewById(R.id.create_insurance_policy_btn);
         view_btn = (Button)findViewById(R.id.all_insurance_policy_btn);
         photo_btn = (Button)findViewById(R.id.picture_repo_btn);
