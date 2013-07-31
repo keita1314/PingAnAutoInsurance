@@ -9,6 +9,7 @@ import com.keita.painganautoinsurance.entity.InsurancePolicy;
 import com.keita.pinganautoinsurance.database.DBHelper;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -19,6 +20,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -51,7 +54,18 @@ public class InsuranceListActivity extends Activity {
 		loadListView(page_start,page_end);
 		listAdapter = new ListAdapter(this,insurancePolicy_list);
 		listView.setAdapter(listAdapter);
-		
+		listView.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int position,
+					long id) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+				intent.putExtra("insurancePolicyId",insurancePolicy_list.get(position).getId());
+				
+			}
+			
+		});
 	}
 	//加载列表
 	public void loadListView(int start,int end){
@@ -62,6 +76,7 @@ public class InsuranceListActivity extends Activity {
 				insurancePolicy_list.clear();
 				Log.v("load", "loadlistview");
 				InsurancePolicy ip = new InsurancePolicy();
+				ip.setId(cur.getString(cur.getColumnIndex("policy_id")));
 				ip.setInsurancePhotoId(cur.getString(cur.getColumnIndex("photos_id")));
 				System.out.println("loc"+cur.getString(cur.getColumnIndex("location")));
 				ip.setLocation(cur.getString(cur.getColumnIndex("location")));

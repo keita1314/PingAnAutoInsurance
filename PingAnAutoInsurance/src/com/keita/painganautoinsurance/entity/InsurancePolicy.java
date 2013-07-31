@@ -6,11 +6,19 @@ import java.util.ArrayList;
  * 保单类的实现
  */
 public class InsurancePolicy {
+	private String id = null;
 	private String location = null;
 	private String insurancePhotoId = null;
 	private String textId = null;
 	private String Date = null;
 	
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getTextId() {
 		return textId;
 	}
