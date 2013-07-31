@@ -36,6 +36,8 @@
         <activity android:name="com.keita.pinganautoinsurance.PhotoCommentActivity" />
         <activity android:name="com.keita.pinganautoinsurance.InsuranceLocationActivity" />
         <activity android:name="com.keita.pinganautoinsurance.InsuranceTextActivity" />
+         <activity android:name="com.keita.pinganautoinsurance.InsuranceListActivity" />
+        
     </application>
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
