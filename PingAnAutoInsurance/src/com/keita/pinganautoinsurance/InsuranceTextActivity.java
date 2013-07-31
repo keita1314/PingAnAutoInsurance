@@ -1,10 +1,15 @@
 package com.keita.pinganautoinsurance;
 
+import java.util.ArrayList;
+
 import com.keita.painganautoinsurance.entity.TextImage;
+import com.keita.pinganautoinsurance.database.DBHelper;
 import com.keita.pinganautoinsurance.mywidget.ComboEditText;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,11 +31,14 @@ public class InsuranceTextActivity extends Activity {
 	private EditText caseDriverLicence = null;
 	private ComboEditText caseCarNo = null;
 	private EditText caseCarType = null;
+	private EditText caseCarVin = null;
 	private ComboEditText caseThirdCarNo = null;
 	private EditText caseThirdCarType = null;
 	private Button continueBtn = null;
 	private ArrayAdapter<String> adapter = null;
 	// 初始化字符串
+	private String location = "";
+	private String insurancePhotoId = "";
 	private String caseNoStr = "";
 	private String caseOwnerStr = "";
 	private String caseDriverStr = "";
@@ -40,8 +48,11 @@ public class InsuranceTextActivity extends Activity {
 	private String caseDriverLicenceStr = "";
 	private String caseCarNoStr = "";
 	private String caseCarTypeStr = "";
+	private String caseCarVinStr = "";
 	private String caseThirdCarNoStr = "";
 	private String caseThirdCarTypeStr = "";
+
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +68,15 @@ public class InsuranceTextActivity extends Activity {
 		caseDriverLicence = (EditText) findViewById(R.id.case_driver_licence);
 		caseCarNo = (ComboEditText) findViewById(R.id.case_car_no);
 		caseCarType = (EditText) findViewById(R.id.case_car_type);
+		caseCarVin = (EditText)findViewById(R.id.case_car_vin);
 		caseThirdCarNo = (ComboEditText) findViewById(R.id.case_third_car_no);
 		caseThirdCarType = (EditText) findViewById(R.id.case_third_car_type);
 		continueBtn = (Button) findViewById(R.id.continue_btn);
 		final String[] relationArray = { "本人", "非本人" };
 		relationShip = (Spinner) findViewById(R.id.relationship);
+		location = this.getIntent().getStringExtra("location");
+		insurancePhotoId = this.getIntent().getStringExtra("insurance_photo_id");
+		
 		//车牌数据源
 		final String[] carNoArray={"粤","京","津","沪","渝","冀","豫","云","辽","黑","湘","皖",
 									"鲁","新","苏","浙","赣","鄂","桂","甘"};
@@ -124,7 +139,7 @@ public class InsuranceTextActivity extends Activity {
 				if (caseDriver.getText().toString() != null)
 					caseDriverStr = caseDriver.getText().toString();
 				if (caseOwnerPhone.getText().toString() != null)
-					caseOwnerStr = caseOwnerPhone.getText().toString();
+					caseOwnerPhoneStr = caseOwnerPhone.getText().toString();
 				if (caseDriverPhone.getText().toString() != null)
 					caseDriverPhoneStr = caseDriverPhone.getText().toString();
 				if (caseDriverLicence.getText().toString() != null)
@@ -133,6 +148,8 @@ public class InsuranceTextActivity extends Activity {
 					caseCarNoStr = caseCarNo.getText().toString();
 				if (caseCarType.getText().toString() != null)
 					caseCarTypeStr = caseCarType.getText().toString();
+				if(caseCarVin.getText().toString()!=null)
+					caseCarVinStr = caseCarVin.getText().toString();
 				if (caseThirdCarNo.getText().toString() != null)
 					caseThirdCarNoStr = caseThirdCarNo.getText().toString();
 				if (caseThirdCarType.getText().toString() != null)
@@ -143,12 +160,28 @@ public class InsuranceTextActivity extends Activity {
 						+ caseDriverLicenceStr + caseCarNoStr + caseCarTypeStr
 						+ caseThirdCarNoStr + caseThirdCarTypeStr+relationShipStr);
 				
+				
 				Intent intent = new Intent();
 				intent.setClass(InsuranceTextActivity.this,
 						InsuranceRecordActivity.class);
+				intent.putExtra("location", location);
+				intent.putExtra("insurance_photo_id", insurancePhotoId);
+				intent.putExtra("caseOwnerStr", caseOwnerStr);
+				intent.putExtra("caseNoStr", caseNoStr);
+				intent.putExtra("caseDriverStr", caseDriverStr);
+				intent.putExtra("relationShipStr", relationShipStr);
+				intent.putExtra("caseOwnerPhoneStr", caseOwnerPhoneStr);
+				intent.putExtra("caseDriverPhoneStr", caseDriverPhoneStr);
+				intent.putExtra("caseDriverLicenceStr", caseDriverLicenceStr);
+				intent.putExtra("caseCarNoStr", caseCarNoStr);
+				intent.putExtra("caseCarTypeStr", caseCarTypeStr);
+				intent.putExtra("caseCarVinStr", caseCarVinStr);
+				intent.putExtra("caseThirdCarNoStr", caseThirdCarNoStr);
+				intent.putExtra("caseThirdCarTypeStr", caseThirdCarTypeStr);
+				//intent.putCharSequenceArrayListExtra("imageIdList", imageIdList);
 				startActivity(intent);
 		
-				InsuranceTextActivity.this.finish();
+				//InsuranceTextActivity.this.finish();
 			}
 
 		});

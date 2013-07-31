@@ -75,7 +75,7 @@ public class InsuranceLocationActivity extends Activity {
 
 	// 定位地址
 	private EditText locationAddress;
-	String address = null;
+	String address = "";
 	//下一步按钮
 	private Button continueBtn = null;
 	
@@ -105,6 +105,7 @@ public class InsuranceLocationActivity extends Activity {
 				// TODO Auto-generated method stub
 				// 跳转到下一步
 				Intent intent = new Intent();
+				intent.putExtra("location", address);
 				intent.setClass(InsuranceLocationActivity.this, InsurancePhotoActivity.class);
 				startActivity(intent);
 				InsuranceLocationActivity.this.finish();
