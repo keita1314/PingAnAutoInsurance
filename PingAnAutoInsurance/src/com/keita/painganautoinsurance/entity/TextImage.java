@@ -16,6 +16,9 @@ public class TextImage implements Parcelable {
 	private Bitmap image;
 	//照片路径
 	private String imagePath;
+	//拍照时间
+	private String imageDate;
+	
 	//构造函数
 	public TextImage(){
 		setText("尚未评论");
@@ -53,6 +56,14 @@ public class TextImage implements Parcelable {
 		this.image = image;
 	}
 
+	public String getImageDate() {
+		return imageDate;
+	}
+
+	public void setImageDate(String imageDate) {
+		this.imageDate = imageDate;
+	}
+
 	public static final Creator<TextImage> CREATOR = new Creator<TextImage>() {
 
 		@Override
@@ -63,6 +74,7 @@ public class TextImage implements Parcelable {
 			textImage.image = Bitmap.CREATOR.createFromParcel(source);
 			textImage.text = source.readString();
 			textImage.imagePath = source.readString();
+			textImage.imageDate = source.readString();
 			return textImage;
 		}
 
@@ -87,6 +99,7 @@ public class TextImage implements Parcelable {
 		image.writeToParcel(pracel, 0);
 		pracel.writeString(text);
 		pracel.writeString(imagePath);
+		pracel.writeString(imageDate);
 
 	}
 	public void recycle(){
