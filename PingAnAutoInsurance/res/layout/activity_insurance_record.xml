@@ -28,6 +28,7 @@
            android:id="@+id/hurt_num"
            android:layout_height="wrap_content"
            android:layout_width="wrap_content"
+           android:numeric="integer"
            android:hint="0"/>
          <TextView 
            android:layout_height="wrap_content"
@@ -38,6 +39,7 @@
            android:id="@+id/dead_num"
            android:layout_height="wrap_content"
            android:layout_width="wrap_content"
+           android:numeric="integer"
            android:hint="0"/>
           </LinearLayout>
           <TextView 
