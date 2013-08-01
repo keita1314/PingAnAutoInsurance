@@ -163,7 +163,7 @@ public class InsuranceListActivity extends Activity {
 		options.inSampleSize = 8;
 		InputStream is = null;
 		Bitmap source = null;
-		;
+		
 		
 		try {
 			is = new FileInputStream(img_path);

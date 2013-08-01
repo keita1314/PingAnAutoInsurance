@@ -39,6 +39,7 @@
          <activity android:name="com.keita.pinganautoinsurance.InsuranceListActivity" />
          <activity android:name="com.keita.pinganautoinsurance.InsuranceViewActivity" />
          <activity android:name="com.keita.pinganautoinsurance.PhotoViewActivity" />
+         <activity android:name="com.keita.pinganautoinsurance.PhotoListActivity" />
         
     </application>
 
