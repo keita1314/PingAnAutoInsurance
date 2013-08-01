@@ -37,6 +37,7 @@
         <activity android:name="com.keita.pinganautoinsurance.InsuranceLocationActivity" />
         <activity android:name="com.keita.pinganautoinsurance.InsuranceTextActivity" />
          <activity android:name="com.keita.pinganautoinsurance.InsuranceListActivity" />
+         <activity android:name="com.keita.pinganautoinsurance.InsuranceViewActivity" />
         
     </application>
 

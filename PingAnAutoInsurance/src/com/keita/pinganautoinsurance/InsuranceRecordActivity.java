@@ -163,7 +163,8 @@ public class InsuranceRecordActivity extends Activity {
 				.getStringExtra("insurance_photo_id"));
 		insurancePolicy.setDate(dateformat.format(new Date()));
 		caseNo = intent.getStringExtra("caseNoStr");
-		caseOwner = intent.getStringExtra("caseDriverStr");
+		caseDriver = intent.getStringExtra("caseDriverStr");
+		System.out.println(caseDriver);
 		caseOwner = intent.getStringExtra("caseOwnerStr");
 		relationShip = intent.getStringExtra("relationShipStr");
 		caseOwnerPhone = intent.getStringExtra("caseOwnerPhoneStr");
@@ -171,7 +172,7 @@ public class InsuranceRecordActivity extends Activity {
 		caseDriverLicence = intent.getStringExtra("caseDriverLicenceStr");
 		caseCarNo = intent.getStringExtra("caseCarNoStr");
 		caseCarType = intent.getStringExtra("caseCarTypeStr");
-		caseCarVin = intent.getStringExtra("caseCarVin");
+		caseCarVin = intent.getStringExtra("caseCarVinStr");
 		caseThirdCarNo = intent.getStringExtra("caseThirdCarNoStr");
 		caseThirdCarType = intent.getStringExtra("caseThirdCarTypeStr");
 
@@ -346,10 +347,10 @@ public class InsuranceRecordActivity extends Activity {
 				cv.put("case_no", caseNo);
 				cv.put("case_owner", caseOwner);
 				cv.put("case_driver", caseDriver);
-				cv.put("realtion", relationShip);
+				cv.put("relation", relationShip);
 				cv.put("case_owner_phone", caseOwnerPhone);
 				cv.put("case_driver_phone", caseDriverPhone);
-				cv.put("case_drvier_lience", caseDriverLicence);
+				cv.put("case_driver_lience", caseDriverLicence);
 				cv.put("case_car_no", caseCarNo);
 				cv.put("case_car_type", caseCarType);
 				cv.put("vin", caseCarVin);
@@ -361,11 +362,11 @@ public class InsuranceRecordActivity extends Activity {
 				cv.put("accident_reason", accidentReason.getText());
 				cv.put("accident_detail", accidentDetailStr);
 
-				dbHelper.insertData(dataBase, cv, "insruace_text_table");
+				dbHelper.insertData(dataBase, cv, "insurance_text_table");
 
 				String[] id = { "text_id" };
 				Cursor cur = dbHelper.queryByCol(dataBase,
-						"insruace_text_table", id);
+						"insurance_text_table", id);
 				if (cur != null) {
 					cur.moveToLast();
 					insurancePolicy.setTextId(cur.getString(cur
@@ -383,6 +384,10 @@ public class InsuranceRecordActivity extends Activity {
 				cv.put("photos_id", insurancePolicy.getInsurancePhotoId());
 				cv.put("text_id", insurancePolicy.getTextId());
 				dbHelper.insertData(dataBase, cv, "insurance_policy_table");
+				Intent intent = new Intent();
+				intent.setClass(InsuranceRecordActivity.this, InsuranceListActivity.class);
+				startActivity(intent);
+				InsuranceRecordActivity.this.finish();
 			}
 
 		});

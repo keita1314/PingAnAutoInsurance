@@ -62,6 +62,10 @@ public class InsuranceListActivity extends Activity {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
 				intent.putExtra("insurancePolicyId",insurancePolicy_list.get(position).getId());
+				intent.putExtra("date", insurancePolicy_list.get(position).getDate());
+				intent.putExtra("location", insurancePolicy_list.get(position).getLocation());
+				intent.setClass(InsuranceListActivity.this, InsuranceViewActivity.class);
+				startActivity(intent);
 				
 			}
 			
@@ -182,7 +186,7 @@ public class InsuranceListActivity extends Activity {
 		super.onDestroy();
 		dataBase.close();
 		dbHelper.close();
-		if(bitmap != null &!bitmap.isRecycled())
+		if(bitmap != null )
 			bitmap.recycle();
 	}
 	

@@ -180,8 +180,7 @@ public class InsuranceTextActivity extends Activity {
 				intent.putExtra("caseThirdCarTypeStr", caseThirdCarTypeStr);
 				//intent.putCharSequenceArrayListExtra("imageIdList", imageIdList);
 				startActivity(intent);
-		
-				//InsuranceTextActivity.this.finish();
+				InsuranceTextActivity.this.finish();
 			}
 
 		});

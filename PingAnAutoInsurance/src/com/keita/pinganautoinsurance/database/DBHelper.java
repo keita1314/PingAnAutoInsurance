@@ -28,7 +28,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	// 保单对应图片表
 	private static final String INSURANCE_PHOTO_TABLE = "insurance_photo_table";
 	// 保单对应的文本表
-	private static final String INSURANCE_TEXT_TABLE = "insruace_text_table";
+	private static final String INSURANCE_TEXT_TABLE = "insurance_text_table";
 
 	// 创建表的sql语句
 	private static final String TEXT_IMAGE_TABLE_SQL = "CREATE TABLE "
@@ -45,8 +45,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	private static final String INSURANCE_TEXT_SQL = "CREATE TABLE "
 			+ INSURANCE_TEXT_TABLE
-			+ "(text_id integer primary key autoincrement,case_no text,case_owner text,case_driver text,realtion text,"
-			+ "case_owner_phone text,case_driver_phone text,case_drvier_lience text,case_car_no text,case_car_type,vin text,"
+			+ "(text_id integer primary key autoincrement,case_no text,case_owner text,case_driver text,relation text,"
+			+ "case_owner_phone text,case_driver_phone text,case_driver_lience text,case_car_no text,case_car_type,vin text,"
 			+ "case_third_car_no text,case_third_car_type,hurt_num integer,dead_num integer,case_reason text,accident_reason text,"
 			+ "accident_detail text);";
 	private static final String INSURANCE_POLICY_SQL = "CREATE TABLE "
