@@ -73,11 +73,11 @@ public class InsuranceListActivity extends Activity {
 	}
 	//加载列表
 	public void loadListView(int start,int end){
-		Cursor cur = dbHelper.queryAll(dataBase, "insurance_policy_table");
+		Cursor cur = dbHelper.query(dataBase, "insurance_policy_table",null,null,null,null,null,"date desc");
 		int i = start;
 		if(cur.moveToPosition(start)){
 			do{
-				insurancePolicy_list.clear();
+				
 				Log.v("load", "loadlistview");
 				InsurancePolicy ip = new InsurancePolicy();
 				ip.setId(cur.getString(cur.getColumnIndex("policy_id")));
