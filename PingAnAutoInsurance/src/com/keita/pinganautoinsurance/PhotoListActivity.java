@@ -12,6 +12,7 @@ import com.keita.painganautoinsurance.entity.TextImage;
 import com.keita.pinganautoinsurance.database.DBHelper;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -21,10 +22,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class PhotoListActivity extends Activity {
 	private ListView listView = null;
@@ -49,6 +52,22 @@ public class PhotoListActivity extends Activity {
 		 getDataFromDataBase();
 		adapter = new TextImageAdapter(this,list);
 		listView.setAdapter(adapter);
+		// 照片列表的监听
+			listView.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> adapterView, View view,
+							int position, long id) {
+						// TODO Auto-generated method stub
+						
+						Intent intent = new Intent();
+						intent.setClass(PhotoListActivity.this,
+								PhotoViewActivity.class);
+						intent.putExtra("imgId", list.get(position).getImageId());
+						startActivity(intent);
+					}
+
+				});
 
 	}
 
@@ -58,6 +77,7 @@ public class PhotoListActivity extends Activity {
 		if(cur.moveToFirst()){
 		do{
 			textImage = new TextImage();
+			String imageId =  cur.getString(cur.getColumnIndex("id"));
 			String imageText = cur.getString(cur.getColumnIndex("img_text"));
 			String imageDate =  cur.getString(cur.getColumnIndex("img_date"));
 			String imagePath =cur.getString(cur.getColumnIndex("img_path"));
@@ -71,8 +91,8 @@ public class PhotoListActivity extends Activity {
 			try {
 				is = new FileInputStream(imagePath);
 				source = BitmapFactory.decodeStream(is, null, options);
-				bitmap = ThumbnailUtils.extractThumbnail(source, 100,
-						100);
+				bitmap = ThumbnailUtils.extractThumbnail(source, 90,
+						90);
 				if(source != null && !source.isRecycled())
 				source.recycle();
 				is.close();
@@ -80,6 +100,7 @@ public class PhotoListActivity extends Activity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			textImage.setImageId(imageId);
 			textImage.setImage(bitmap);
 			textImage.setText(imageText);
 			textImage.setImageDate(imageDate);

@@ -64,6 +64,17 @@ public class MainActivity extends Activity {
 			}
         	
         });
+        record_btn.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+				intent.setClass(MainActivity.this,RecordListActivity.class);
+				startActivity(intent);
+			}
+        	
+        });
     }
  
 

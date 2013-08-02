@@ -20,6 +20,7 @@ public class PhotoViewActivity extends Activity {
 	private TextView textView = null;
 	private String imgId = null;
 	private Bitmap bitmap = null;
+	String imagePath  = null;
 	// 数据库操作
 	DBHelper dbHelper = null;
 	SQLiteDatabase dataBase = null;
