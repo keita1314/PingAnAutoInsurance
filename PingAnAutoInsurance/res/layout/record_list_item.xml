@@ -28,5 +28,15 @@
         android:layout_alignParentBottom="true"/>
     
     </RelativeLayout>
+    <Button 
+        android:id="@+id/play_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="播放"/>
+    <Button 
+        android:id="@+id/stop_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="停止"/>
 
 </LinearLayout>
