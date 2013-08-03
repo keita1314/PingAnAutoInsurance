@@ -558,7 +558,7 @@ public class InsuranceViewActivity extends Activity {
 				track = new AudioTrack(AudioManager.STREAM_MUSIC,
 						SAMPLE_RATE_IN_HZ,
 						AudioFormat.CHANNEL_CONFIGURATION_MONO,
-						AudioFormat.ENCODING_PCM_16BIT, bufferSize,
+						AudioFormat.ENCODING_PCM_16BIT, bufferSize*4,
 						AudioTrack.MODE_STREAM);
 				// 开始播放
 				track.setStereoVolume(1.0f, 1.0f);

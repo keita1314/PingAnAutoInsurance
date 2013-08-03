@@ -99,7 +99,7 @@ public class InsuranceRecordActivity extends Activity {
 
 	private AudioRecord ar;
 	private int bs;
-	private static int SAMPLE_RATE_IN_HZ = 8000;
+	private static int SAMPLE_RATE_IN_HZ =  8000;
 	/* 录制音频文件 */
 	private File recAudioFile = null;
 	DataOutputStream dos = null;
@@ -127,9 +127,9 @@ public class InsuranceRecordActivity extends Activity {
 		hurtNum = (EditText) findViewById(R.id.hurt_num);
 		deadNum = (EditText) findViewById(R.id.dead_num);
 		accidentDetail = (EditText) findViewById(R.id.accident_detail);
-		
-		//格式化时间
-		dateformat =new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+		// 格式化时间
+		dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		dbHelper = new DBHelper(this);
 		dataBase = dbHelper.getWritableDatabase();
@@ -226,7 +226,8 @@ public class InsuranceRecordActivity extends Activity {
 					recAudioFile = new File(recordDir.getAbsolutePath()
 							+ "/RECORD_" + record_name + ".pcm");
 					recAudioFile.createNewFile();
-					insurancePolicy.setRecordPath(recAudioFile.getAbsolutePath());
+					insurancePolicy.setRecordPath(recAudioFile
+							.getAbsolutePath());
 
 					dos = new DataOutputStream(new BufferedOutputStream(
 							new FileOutputStream(recAudioFile)));
@@ -292,10 +293,14 @@ public class InsuranceRecordActivity extends Activity {
 				if (isRecording) {
 					isShowing = false;
 					Log.v("test", "停止");
-					/*
-					 * try { dos.close(); } catch (Exception e) { // TODO
-					 * Auto-generated catch block e.printStackTrace(); }
-					 */
+
+					/*try {
+						dos.close();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}*/
+
 					ar.stop();
 					ar.release();
 					ar = null;
@@ -377,7 +382,7 @@ public class InsuranceRecordActivity extends Activity {
 
 				cv.clear();
 				cv = new ContentValues();
-				System.out.println("reco"+insurancePolicy.getLocation());
+				System.out.println("reco" + insurancePolicy.getLocation());
 				cv.put("location", insurancePolicy.getLocation());
 				cv.put("record_path", insurancePolicy.getRecordPath());
 				cv.put("date", insurancePolicy.getDate());
@@ -385,7 +390,8 @@ public class InsuranceRecordActivity extends Activity {
 				cv.put("text_id", insurancePolicy.getTextId());
 				dbHelper.insertData(dataBase, cv, "insurance_policy_table");
 				Intent intent = new Intent();
-				intent.setClass(InsuranceRecordActivity.this, InsuranceListActivity.class);
+				intent.setClass(InsuranceRecordActivity.this,
+						InsuranceListActivity.class);
 				startActivity(intent);
 				InsuranceRecordActivity.this.finish();
 			}
@@ -504,7 +510,7 @@ public class InsuranceRecordActivity extends Activity {
 				AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC,
 						SAMPLE_RATE_IN_HZ,
 						AudioFormat.CHANNEL_CONFIGURATION_MONO,
-						AudioFormat.ENCODING_PCM_16BIT, bufferSize,
+						AudioFormat.ENCODING_PCM_16BIT, bufferSize*4 ,
 						AudioTrack.MODE_STREAM);
 				// 开始播放
 				track.setStereoVolume(1.0f, 1.0f);
