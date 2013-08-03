@@ -45,9 +45,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	private static final String INSURANCE_TEXT_SQL = "CREATE TABLE "
 			+ INSURANCE_TEXT_TABLE
-			+ "(text_id integer primary key autoincrement,case_no text,case_owner text,case_driver text,relation text,"
+			+ "(text_id integer primary key autoincrement,case_no text,case_owner text,case_driver text,relation text,case_insurance_id text,"
 			+ "case_owner_phone text,case_driver_phone text,case_driver_lience text,case_car_no text,case_car_type,vin text,"
-			+ "case_third_car_no text,case_third_car_type,hurt_num integer,dead_num integer,case_reason text,accident_reason text,"
+			+ "case_third_car_no text,case_third_car_type,hurt_num integer,dead_num integer,case_loss text,case_reason text,accident_reason text,"
 			+ "accident_detail text);";
 	private static final String INSURANCE_POLICY_SQL = "CREATE TABLE "
 			+ INSURANCE_POLICY_TABLE
@@ -95,8 +95,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 	}
 
-	public void update() {
-
+	public void updateData(SQLiteDatabase db,String table,ContentValues values, String whereClause, String[] whereArgs) {
+			db.update(table, values, whereClause, whereArgs);
 	};
 
 	// 按列查询

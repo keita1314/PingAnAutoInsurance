@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ public class InsuranceViewActivity extends Activity {
 
 	private TextView caseOwnerTv = null;
 	private TextView caseDriverTv = null;
+	private TextView caseInsuranceIdTv = null;
 	private TextView relationShipTv = null;
 	private TextView caseOwnerPhoneTv = null;
 	private TextView caseDriverPhoneTv = null;
@@ -46,6 +48,7 @@ public class InsuranceViewActivity extends Activity {
 	private TextView caseThirdCarNoTv = null;
 	private TextView caseThirdCarTypeTv = null;
 	private TextView locationTv = null;
+	private TextView caseLossTv = null;
 	private TextView hurtNumTv = null;
 	private TextView deadNumTv = null;
 	private TextView caseReasonTv = null;
@@ -66,6 +69,7 @@ public class InsuranceViewActivity extends Activity {
 	private String caseNo = null;
 	private String caseOwner = null;
 	private String caseDriver = null;
+	private String caseInsuranceId = null;
 	private String relationShip = null;
 	private String caseOwnerPhone = null;
 	private String caseDriverPhone = null;
@@ -80,6 +84,7 @@ public class InsuranceViewActivity extends Activity {
 	private String hurtNumStr = "0";
 	private String deadNumStr = "0";
 	private String locationStr = "";
+	private String caseLossStr = "";
 	private String caseReasonStr = "";
 	private String accidentReasonStr = "";
 	private String accidentDetailStr = "";
@@ -104,9 +109,22 @@ public class InsuranceViewActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_insurance_view);
+		ImageButton previous_button = null;
+		View view = findViewById(R.id.top_bar);
+		previous_button =(ImageButton) view.findViewById(R.id.top_bar_back);
+		previous_button.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				InsuranceViewActivity.this.finish();
+			}
+			
+		});
 		caseNoTv = (TextView) findViewById(R.id.case_no);
 		caseOwnerTv = (TextView) findViewById(R.id.case_owner);
 		relationShipTv = (TextView) findViewById(R.id.relationship);
+		caseInsuranceIdTv = (TextView) findViewById(R.id.case_insurance_id);
 		caseOwnerPhoneTv = (TextView) findViewById(R.id.case_owner_phone);
 		caseDriverTv = (TextView) findViewById(R.id.case_driver);
 		caseDriverPhoneTv = (TextView) findViewById(R.id.case_driver_phone);
@@ -117,6 +135,7 @@ public class InsuranceViewActivity extends Activity {
 		caseThirdCarNoTv = (TextView) findViewById(R.id.case_third_car_no);
 		caseThirdCarTypeTv = (TextView) findViewById(R.id.case_third_car_type);
 		locationTv = (TextView) findViewById(R.id.location);
+		caseLossTv = (TextView) findViewById(R.id.case_loss);
 		caseReasonTv = (TextView) findViewById(R.id.case_reason);
 		accidentReasonTv = (TextView) findViewById(R.id.accident_reason);
 		accidentDetailTv = (TextView) findViewById(R.id.accident_detail);
@@ -161,7 +180,10 @@ public class InsuranceViewActivity extends Activity {
 				// TODO Auto-generated method stub
 				playBtn.setClickable(false);
 				Log.v("play", "play");
-				new PlayAsyncTask().execute();
+				if(recAudioFile!=null)
+					new PlayAsyncTask().execute();
+				else
+					Toast.makeText(InsuranceViewActivity.this, "找不到录音文件", Toast.LENGTH_SHORT).show();
 
 			}
 
@@ -196,7 +218,8 @@ public class InsuranceViewActivity extends Activity {
 			text_id = cur.getString(cur.getColumnIndex("text_id"));
 			photos_id = cur.getString(cur.getColumnIndex("photos_id"));
 			record_path = cur.getString(cur.getColumnIndex("record_path"));
-			recAudioFile = new File(record_path);
+			if(record_path	!= null)
+				recAudioFile = new File(record_path);
 		}
 		cur.close();
 		// 从文本表中得到数据
@@ -211,11 +234,14 @@ public class InsuranceViewActivity extends Activity {
 				System.out.println(caseOwner);
 
 				caseDriver = cur.getString(cur.getColumnIndex("case_driver"));
-				System.out.println(caseDriver);
+				System.out.println("驾驶员"+caseDriver);
 
 				relationShip = cur.getString(cur.getColumnIndex("relation"));
 				System.out.println(relationShip);
-
+				
+				caseInsuranceId =  cur.getString(cur.getColumnIndex("case_insurance_id"));
+				System.out.println("保单"+caseInsuranceId);
+				
 				caseOwnerPhone = cur.getString(cur
 						.getColumnIndex("case_owner_phone"));
 				System.out.println(caseOwnerPhone);
@@ -251,7 +277,10 @@ public class InsuranceViewActivity extends Activity {
 
 				deadNumStr = cur.getString(cur.getColumnIndex("dead_num"));
 				System.out.println(deadNumStr);
-
+				
+				caseLossStr = cur.getString(cur.getColumnIndex("case_loss"));
+				System.out.println("物损"+caseLossStr);
+				
 				caseReasonStr = cur
 						.getString(cur.getColumnIndex("case_reason"));
 				System.out.println(caseReasonStr);
@@ -335,6 +364,12 @@ public class InsuranceViewActivity extends Activity {
 			relationShipTv.setText(relationShip);
 		else
 			relationShipTv.setText("空");
+		if (caseInsuranceId != null){
+			caseInsuranceIdTv.setText(caseInsuranceId);
+			System.out.println("保单2"+caseInsuranceId);
+		}
+		else
+			caseInsuranceIdTv.setText("空");
 		if (caseOwnerPhone != null)
 			caseOwnerPhoneTv.setText(caseOwnerPhone);
 		else
@@ -383,7 +418,10 @@ public class InsuranceViewActivity extends Activity {
 			deadNumTv.setText(deadNumStr);
 		else
 			deadNumTv.setText("空");
-
+		if(caseLossStr != null)
+			caseLossTv.setText(caseLossStr);
+		else
+			caseLossTv.setText("空");
 		if (caseReasonStr != null)
 			caseReasonTv.setText(caseReasonStr);
 		else

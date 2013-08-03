@@ -22,11 +22,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class PhotoListActivity extends Activity {
@@ -45,70 +48,84 @@ public class PhotoListActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_photo_list);
-		listView = (ListView)findViewById(R.id.photo_list);
+		ImageButton previous_button = null;
+		View view = findViewById(R.id.top_bar);
+		previous_button = (ImageButton) view.findViewById(R.id.top_bar_back);
+		previous_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				PhotoListActivity.this.finish();
+			}
+
+		});
+		listView = (ListView) findViewById(R.id.photo_list);
 		list = new ArrayList<TextImage>();
 		dbHelper = new DBHelper(this);
 		dataBase = dbHelper.getWritableDatabase();
-		 getDataFromDataBase();
-		adapter = new TextImageAdapter(this,list);
+		getDataFromDataBase();
+		adapter = new TextImageAdapter(this, list);
 		listView.setAdapter(adapter);
 		// 照片列表的监听
-			listView.setOnItemClickListener(new OnItemClickListener() {
+		listView.setOnItemClickListener(new OnItemClickListener() {
 
-					@Override
-					public void onItemClick(AdapterView<?> adapterView, View view,
-							int position, long id) {
-						// TODO Auto-generated method stub
-						
-						Intent intent = new Intent();
-						intent.setClass(PhotoListActivity.this,
-								PhotoViewActivity.class);
-						intent.putExtra("imgId", list.get(position).getImageId());
-						startActivity(intent);
-					}
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
 
-				});
+				Intent intent = new Intent();
+				intent.setClass(PhotoListActivity.this, PhotoViewActivity.class);
+				intent.putExtra("imgId", list.get(position).getImageId());
+				startActivity(intent);
+			}
+
+		});
 
 	}
 
 	public void getDataFromDataBase() {
 		Cursor cur = dbHelper.query(dataBase, "text_image_table", null, null,
 				null, null, null, null);
-		if(cur.moveToFirst()){
-		do{
-			textImage = new TextImage();
-			String imageId =  cur.getString(cur.getColumnIndex("id"));
-			String imageText = cur.getString(cur.getColumnIndex("img_text"));
-			String imageDate =  cur.getString(cur.getColumnIndex("img_date"));
-			String imagePath =cur.getString(cur.getColumnIndex("img_path"));
-			//根据路径得到图片
-			BitmapFactory.Options options = new BitmapFactory.Options();
-			options.inSampleSize = 8;
-			InputStream is = null;
-			Bitmap source = null;
-			
-			
-			try {
-				is = new FileInputStream(imagePath);
-				source = BitmapFactory.decodeStream(is, null, options);
-				bitmap = ThumbnailUtils.extractThumbnail(source, 90,
-						90);
-				if(source != null && !source.isRecycled())
-				source.recycle();
-				is.close();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			textImage.setImageId(imageId);
-			textImage.setImage(bitmap);
-			textImage.setText(imageText);
-			textImage.setImageDate(imageDate);
-			list.add(textImage);
-			
-		}while(cur.moveToNext());
-		cur.close();
-	}
+		if (cur.moveToFirst()) {
+			do {
+				textImage = new TextImage();
+				String imageId = cur.getString(cur.getColumnIndex("id"));
+				String imageText = cur
+						.getString(cur.getColumnIndex("img_text"));
+				String imageDate = cur
+						.getString(cur.getColumnIndex("img_date"));
+				String imagePath = cur
+						.getString(cur.getColumnIndex("img_path"));
+				// 根据路径得到图片
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inSampleSize = 8;
+				InputStream is = null;
+				Bitmap source = null;
+
+				try {
+					is = new FileInputStream(imagePath);
+					source = BitmapFactory.decodeStream(is, null, options);
+					bitmap = ThumbnailUtils.extractThumbnail(source, 90, 90);
+					if (source != null && !source.isRecycled())
+						source.recycle();
+					is.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				textImage.setImageId(imageId);
+				textImage.setImage(bitmap);
+				textImage.setText(imageText);
+				textImage.setImageDate(imageDate);
+				list.add(textImage);
+
+			} while (cur.moveToNext());
+			cur.close();
+		} else
+			Toast.makeText(PhotoListActivity.this, "没有资源", Toast.LENGTH_SHORT)
+					.show();
 	}
 
 	// 定义adapter
@@ -166,8 +183,10 @@ public class PhotoListActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		if(bitmap!=null)
+		dataBase.close();
+		dbHelper.close();
+		if (bitmap != null)
 			bitmap.recycle();
 	}
-	
+
 }

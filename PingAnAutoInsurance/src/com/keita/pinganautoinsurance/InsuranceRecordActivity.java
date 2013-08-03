@@ -59,6 +59,7 @@ public class InsuranceRecordActivity extends Activity {
 	private EditText hurtNum = null;
 	private EditText deadNum = null;
 	private EditText accidentDetail = null;
+	private EditText caseLoss = null;
 	private ComboEditText caseReason = null;
 	private ComboEditText accidentReason = null;
 
@@ -76,7 +77,7 @@ public class InsuranceRecordActivity extends Activity {
 
 	private String hurtNumStr = "0";
 	private String deadNumStr = "0";
-
+	private String caseLossStr = "";
 	private String caseReasonStr = "";
 	private String accidentReasonStr = "";
 	private String accidentDetailStr = "";
@@ -84,18 +85,19 @@ public class InsuranceRecordActivity extends Activity {
 	// 保单
 	InsurancePolicy insurancePolicy = null;
 
-	private String caseNo = null;
-	private String caseOwner = null;
-	private String caseDriver = null;
-	private String relationShip = null;
-	private String caseOwnerPhone = null;
-	private String caseDriverPhone = null;
-	private String caseDriverLicence = null;
-	private String caseCarNo = null;
-	private String caseCarType = null;
-	private String caseCarVin = null;
-	private String caseThirdCarNo = null;
-	private String caseThirdCarType = null;
+	private String caseNo = "";
+	private String caseOwner = "";
+	private String caseDriver = "";
+	private String relationShip = "";
+	private String caseInsuranceId = "";
+	private String caseOwnerPhone = "";
+	private String caseDriverPhone = "";
+	private String caseDriverLicence = "";
+	private String caseCarNo = "";
+	private String caseCarType = "";
+	private String caseCarVin = "";
+	private String caseThirdCarNo = "";
+	private String caseThirdCarType = "";
 
 	private AudioRecord ar;
 	private int bs;
@@ -127,13 +129,14 @@ public class InsuranceRecordActivity extends Activity {
 		hurtNum = (EditText) findViewById(R.id.hurt_num);
 		deadNum = (EditText) findViewById(R.id.dead_num);
 		accidentDetail = (EditText) findViewById(R.id.accident_detail);
+		caseLoss = (EditText) findViewById(R.id.case_loss);
 
 		// 格式化时间
 		dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		dbHelper = new DBHelper(this);
 		dataBase = dbHelper.getWritableDatabase();
-
+		
 		final String[] caseReasonArray = { "碰撞", "倾覆", "火灾", "爆炸", "自燃", "盗抢",
 				"外界物体坠落", "外界物体倒塌", "雷击", "暴风", "暴雨", "洪水", "雹灾", "玻璃延烧",
 				"行驶中玻璃爆裂", "被砸", "其它" };
@@ -149,7 +152,7 @@ public class InsuranceRecordActivity extends Activity {
 				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		accidentAdapter
 				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-
+		
 		caseReason = (ComboEditText) findViewById(R.id.case_reason);
 		accidentReason = (ComboEditText) findViewById(R.id.accident_reason);
 
@@ -166,6 +169,7 @@ public class InsuranceRecordActivity extends Activity {
 		caseDriver = intent.getStringExtra("caseDriverStr");
 		System.out.println(caseDriver);
 		caseOwner = intent.getStringExtra("caseOwnerStr");
+		caseInsuranceId = intent.getStringExtra("caseInsuranceIdStr");
 		relationShip = intent.getStringExtra("relationShipStr");
 		caseOwnerPhone = intent.getStringExtra("caseOwnerPhoneStr");
 		caseDriverPhone = intent.getStringExtra("caseDriverPhoneStr");
@@ -341,10 +345,12 @@ public class InsuranceRecordActivity extends Activity {
 				 * System.out.println(caseReason.getText());
 				 * System.out.println(accidentReason.getText());
 				 */
-				if (hurtNum.getText().toString() != null)
+				if (!hurtNum.getText().toString().equals(""))
 					hurtNumStr = hurtNum.getText().toString();
-				if (deadNum.getText().toString() != null)
+				if (!deadNum.getText().toString().equals(""))
 					deadNumStr = deadNum.getText().toString();
+				if(caseLoss.getText().toString() != null)
+					caseLossStr = caseLoss.getText().toString();
 				if (accidentDetail.getText().toString() != null)
 					accidentDetailStr = accidentDetail.getText().toString();
 
@@ -352,7 +358,10 @@ public class InsuranceRecordActivity extends Activity {
 				cv.put("case_no", caseNo);
 				cv.put("case_owner", caseOwner);
 				cv.put("case_driver", caseDriver);
+				System.out.println("driver"+caseDriver);
 				cv.put("relation", relationShip);
+				cv.put("case_insurance_id", caseInsuranceId);
+				System.out.println("caseInsuranceId"+caseInsuranceId);
 				cv.put("case_owner_phone", caseOwnerPhone);
 				cv.put("case_driver_phone", caseDriverPhone);
 				cv.put("case_driver_lience", caseDriverLicence);
@@ -363,6 +372,7 @@ public class InsuranceRecordActivity extends Activity {
 				cv.put("case_third_car_type", caseThirdCarType);
 				cv.put("hurt_num", Integer.valueOf(hurtNumStr));
 				cv.put("dead_num", Integer.valueOf(deadNumStr));
+				cv.put("case_loss", caseLossStr);
 				cv.put("case_reason", caseReason.getText());
 				cv.put("accident_reason", accidentReason.getText());
 				cv.put("accident_detail", accidentDetailStr);
@@ -387,6 +397,7 @@ public class InsuranceRecordActivity extends Activity {
 				cv.put("record_path", insurancePolicy.getRecordPath());
 				cv.put("date", insurancePolicy.getDate());
 				cv.put("photos_id", insurancePolicy.getInsurancePhotoId());
+				System.out.println("photo"+insurancePolicy.getInsurancePhotoId());
 				cv.put("text_id", insurancePolicy.getTextId());
 				dbHelper.insertData(dataBase, cv, "insurance_policy_table");
 				Intent intent = new Intent();

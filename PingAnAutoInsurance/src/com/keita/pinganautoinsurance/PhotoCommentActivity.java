@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +34,18 @@ public class PhotoCommentActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_photo_comment);
+		ImageButton previous_button = null;
+		View view = findViewById(R.id.top_bar);
+		previous_button =(ImageButton) view.findViewById(R.id.top_bar_back);
+		previous_button.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				PhotoCommentActivity.this.finish();
+			}
+			
+		});
 		imageView = (ImageView) findViewById(R.id.photo_add_comment);
 		editText = (EditText)findViewById(R.id.edittext_add_comment);
 		textView = (TextView)findViewById(R.id.photo_comment_text);

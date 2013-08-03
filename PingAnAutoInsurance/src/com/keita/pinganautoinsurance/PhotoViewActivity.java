@@ -11,8 +11,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PhotoViewActivity extends Activity {
 
@@ -30,6 +34,18 @@ public class PhotoViewActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_photo_view);
+		ImageButton previous_button = null;
+		View view = findViewById(R.id.top_bar);
+		previous_button =(ImageButton) view.findViewById(R.id.top_bar_back);
+		previous_button.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				PhotoViewActivity.this.finish();
+			}
+			
+		});
 		imageView = (ImageView) findViewById(R.id.photo);
 		textView = (TextView) findViewById(R.id.comment_text);
 		dbHelper = new DBHelper(this);

@@ -18,6 +18,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 public class InsuranceTextActivity extends Activity {
@@ -26,6 +27,7 @@ public class InsuranceTextActivity extends Activity {
 	private EditText caseOwner = null;
 	private EditText caseDriver = null;
 	private Spinner relationShip = null;
+	private EditText caseInsurnceId = null;
 	private EditText caseOwnerPhone = null;
 	private EditText caseDriverPhone = null;
 	private EditText caseDriverLicence = null;
@@ -42,6 +44,7 @@ public class InsuranceTextActivity extends Activity {
 	private String caseNoStr = "";
 	private String caseOwnerStr = "";
 	private String caseDriverStr = "";
+	private String caseInsuranceIdStr = "";
 	private String relationShipStr = "";
 	private String caseOwnerPhoneStr = "";
 	private String caseDriverPhoneStr = "";
@@ -59,9 +62,22 @@ public class InsuranceTextActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_insurance_text);
+		ImageButton previous_button = null;
+		View view = findViewById(R.id.top_bar);
+		previous_button =(ImageButton) view.findViewById(R.id.top_bar_back);
+		previous_button.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				InsuranceTextActivity.this.finish();
+			}
+			
+		});
 		caseNo = (EditText) findViewById(R.id.case_no);
 		caseOwner = (EditText) findViewById(R.id.case_owner);
 		caseDriver = (EditText) findViewById(R.id.case_driver);
+		caseInsurnceId = (EditText) findViewById(R.id.case_insurance_id);
 
 		caseOwnerPhone = (EditText) findViewById(R.id.case_owner_phone);
 		caseDriverPhone = (EditText) findViewById(R.id.case_driver_phone);
@@ -138,6 +154,8 @@ public class InsuranceTextActivity extends Activity {
 					caseOwnerStr = caseOwner.getText().toString();
 				if (caseDriver.getText().toString() != null)
 					caseDriverStr = caseDriver.getText().toString();
+				if(caseInsurnceId.getText().toString() != null)
+					caseInsuranceIdStr = caseInsurnceId.getText().toString();
 				if (caseOwnerPhone.getText().toString() != null)
 					caseOwnerPhoneStr = caseOwnerPhone.getText().toString();
 				if (caseDriverPhone.getText().toString() != null)
@@ -169,6 +187,7 @@ public class InsuranceTextActivity extends Activity {
 				intent.putExtra("caseOwnerStr", caseOwnerStr);
 				intent.putExtra("caseNoStr", caseNoStr);
 				intent.putExtra("caseDriverStr", caseDriverStr);
+				intent.putExtra("caseInsuranceIdStr", caseInsuranceIdStr);
 				intent.putExtra("relationShipStr", relationShipStr);
 				intent.putExtra("caseOwnerPhoneStr", caseOwnerPhoneStr);
 				intent.putExtra("caseDriverPhoneStr", caseDriverPhoneStr);

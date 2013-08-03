@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,7 +73,7 @@ public class InsuranceLocationActivity extends Activity {
 	boolean isRequest = false;// 是否手动触发请求定位
 	boolean isFirstLoc = true;// 是否首次定位
 	boolean isLocationClientStop = false;
-
+	
 	// 定位地址
 	private EditText locationAddress;
 	String address = "";
@@ -85,7 +86,18 @@ public class InsuranceLocationActivity extends Activity {
 		mBMapMan = new BMapManager(getApplication());
 		mBMapMan.init("2F64E03AC6D24CC96C4713F921D8B653D2FC8747", null);
 		setContentView(R.layout.activity_insurance_location_gps);
-		
+		ImageButton previous_button = null;
+		View view = findViewById(R.id.top_bar);
+		previous_button =(ImageButton) view.findViewById(R.id.top_bar_back);
+		previous_button.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				InsuranceLocationActivity.this.finish();
+			}
+			
+		});
 		locationAddress = (EditText) findViewById(R.id.location_text);
 		requestLocButton = (Button) findViewById(R.id.button1);
 		continueBtn = (Button)findViewById(R.id.continue_btn);

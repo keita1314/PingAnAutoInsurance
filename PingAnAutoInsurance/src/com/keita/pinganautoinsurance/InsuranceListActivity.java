@@ -20,9 +20,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -46,6 +48,18 @@ public class InsuranceListActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_insurance_list);
+		ImageButton previous_button = null;
+		View view = findViewById(R.id.top_bar);
+		previous_button =(ImageButton) view.findViewById(R.id.top_bar_back);
+		previous_button.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				InsuranceListActivity.this.finish();
+			}
+			
+		});
 		listView = (ListView) findViewById(R.id.insurance_list);
 		insurancePolicy_list = new ArrayList<InsurancePolicy>();
 		dbHelper = new DBHelper(this);
@@ -134,6 +148,7 @@ public class InsuranceListActivity extends Activity {
 			TextView textViewDate = (TextView) itemView
 					.findViewById(R.id.insurance_item_date);
 			// 设置item的内容
+			System.out.println(currentInsurancePolicy.getInsurancePhotoId());
 			bitmap = getImage(currentInsurancePolicy.getInsurancePhotoId());
 			if(bitmap != null)
 				imageView.setImageBitmap(bitmap);

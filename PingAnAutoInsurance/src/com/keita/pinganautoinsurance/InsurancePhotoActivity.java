@@ -37,6 +37,7 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import android.view.View.OnLongClickListener;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -46,6 +47,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -81,6 +83,18 @@ public class InsurancePhotoActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_insurance_photo);
+		ImageButton previous_button = null;
+		View view = findViewById(R.id.top_bar);
+		previous_button =(ImageButton) view.findViewById(R.id.top_bar_back);
+		previous_button.setOnClickListener(new View.OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				InsurancePhotoActivity.this.finish();
+			}
+			
+		});
 		cameraBtn = (Button) findViewById(R.id.camera_btn);
 		photo_listview = (ListView) findViewById(R.id.photo_list);
 		continueBtn = (Button) findViewById(R.id.continue_btn);
@@ -179,6 +193,7 @@ public class InsurancePhotoActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//把所有的照片插入一个当数据库的保单图片集表中
+				if(textImage_list.size() >0){
 				ContentValues cv  = new ContentValues();
 				for(int i=0;i<textImage_list.size();i++){
 					String imgId = "img" +(i+1)+"_id";
@@ -187,10 +202,10 @@ public class InsurancePhotoActivity extends Activity {
 				dbHelper.insertData(dataBase, cv, "insurance_photo_table");
 				String[] id = {"id"};
 				Cursor cur = dbHelper.queryByCol(dataBase, "insurance_photo_table",id);
-				if(cur!=null) {
+				if(cur.moveToLast()) {
 						cur.moveToLast();
 						insurance_photo_id = cur.getString(cur.getColumnIndex("id"));
-						System.out.println(insurance_photo_id);
+						System.out.println("照片ID"+insurance_photo_id);
 				
 				}
 				Intent intent = new Intent();
@@ -200,6 +215,8 @@ public class InsurancePhotoActivity extends Activity {
 						InsuranceTextActivity.class);
 				startActivity(intent);
 				InsurancePhotoActivity.this.finish();
+				}else
+					Toast.makeText(InsurancePhotoActivity.this, "请拍摄最少一张照片", Toast.LENGTH_SHORT).show();
 
 			}
 
@@ -303,7 +320,12 @@ public class InsurancePhotoActivity extends Activity {
 			if (comment == null)
 				Log.v("comment", "comment is null");
 			textImage_list.get(currentPosition).setText(comment);
+			String[] id = {textImage_list.get(currentPosition).getImageId()};
+			ContentValues cv = new ContentValues();
+			cv.put("img_text", comment);
+			dbHelper.updateData(dataBase, "text_image_table", cv, "id = ?", id);
 			adapter.notifyDataSetChanged();
+			
 		}
 
 	}
