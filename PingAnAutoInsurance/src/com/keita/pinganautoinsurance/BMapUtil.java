@@ -2,7 +2,9 @@ package com.keita.pinganautoinsurance;
 
 import android.graphics.Bitmap;
 import android.view.View;
-
+/*
+ * 百度地图相关
+ */
 public class BMapUtil {
     	
 	/**

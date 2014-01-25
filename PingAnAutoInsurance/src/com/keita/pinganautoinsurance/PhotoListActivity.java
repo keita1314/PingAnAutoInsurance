@@ -1,8 +1,5 @@
 package com.keita.pinganautoinsurance;
 
-/*
- * 照片库页面
- */
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,12 +9,14 @@ import com.keita.painganautoinsurance.entity.TextImage;
 import com.keita.pinganautoinsurance.database.DBHelper;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,39 +31,38 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+/*
+ * 照片库页面
+ */
 public class PhotoListActivity extends Activity {
 	private ListView listView = null;
 	private TextImage textImage = null;
 	private ArrayList<TextImage> list = null;
 	private TextImageAdapter adapter = null;
 	private Bitmap bitmap = null;
-
+	private ProgressDialog dialog = null;
+	boolean isLoaded = false;
 	// 数据库操作
 	DBHelper dbHelper = null;
 	SQLiteDatabase dataBase = null;
+
+	private int perPageNum = 6;
+	private int start = 0;
+	private int end = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_photo_list);
-		ImageButton previous_button = null;
-		View view = findViewById(R.id.top_bar);
-		previous_button = (ImageButton) view.findViewById(R.id.top_bar_back);
-		previous_button.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				PhotoListActivity.this.finish();
-			}
-
-		});
+		// 标题栏设置
+		setTopBar();
 		listView = (ListView) findViewById(R.id.photo_list);
 		list = new ArrayList<TextImage>();
 		dbHelper = new DBHelper(this);
 		dataBase = dbHelper.getWritableDatabase();
-		getDataFromDataBase();
+		end = start + perPageNum;
+		getDataFromDataBase(start, end);
 		adapter = new TextImageAdapter(this, list);
 		listView.setAdapter(adapter);
 		// 照片列表的监听
@@ -85,33 +83,31 @@ public class PhotoListActivity extends Activity {
 
 	}
 
-	public void getDataFromDataBase() {
+	public void getDataFromDataBase(int start, int end) {
 		Cursor cur = dbHelper.query(dataBase, "text_image_table", null, null,
-				null, null, null, null);
-		if (cur.moveToFirst()) {
+				null, null, null, "img_date desc");
+		if (cur.moveToPosition(start)) {
+		
+			if (end > cur.getCount()){
+				end = cur.getCount();
+				
+			}
 			do {
 				textImage = new TextImage();
-				String imageId = cur.getString(cur.getColumnIndex("id"));
+				String imageId = cur.getString(cur
+						.getColumnIndex("text_img_id"));
 				String imageText = cur
 						.getString(cur.getColumnIndex("img_text"));
 				String imageDate = cur
 						.getString(cur.getColumnIndex("img_date"));
 				String imagePath = cur
 						.getString(cur.getColumnIndex("img_path"));
-				// 根据路径得到图片
-				BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inSampleSize = 8;
-				InputStream is = null;
-				Bitmap source = null;
-
+				
 				try {
-					is = new FileInputStream(imagePath);
-					source = BitmapFactory.decodeStream(is, null, options);
-					bitmap = ThumbnailUtils.extractThumbnail(source, 90, 90);
-					if (source != null && !source.isRecycled())
-						source.recycle();
-					is.close();
-				} catch (Exception e) {
+					//对图片进行处理
+					
+					bitmap = BitMapUtil.getSmallBitmap(imagePath);
+				} catch (OutOfMemoryError e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -120,12 +116,14 @@ public class PhotoListActivity extends Activity {
 				textImage.setText(imageText);
 				textImage.setImageDate(imageDate);
 				list.add(textImage);
-
-			} while (cur.moveToNext());
+				start++;
+			} while (cur.moveToNext() && start < end);
 			cur.close();
+
 		} else
-			Toast.makeText(PhotoListActivity.this, "没有资源", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(PhotoListActivity.this, "没有更多的资源",
+					Toast.LENGTH_SHORT).show();
+
 	}
 
 	// 定义adapter
@@ -177,6 +175,46 @@ public class PhotoListActivity extends Activity {
 			return itemView;
 		}
 
+	}
+
+	// 标题栏退出按钮
+	public void setTopBar() {
+
+		ImageButton previous_button = null;
+		ImageButton load_button = null;
+		View view = findViewById(R.id.top_bar);
+		TextView title = (TextView) view.findViewById(R.id.top_title);
+		title.setText("照片库");
+		previous_button = (ImageButton) view.findViewById(R.id.top_bar_back);
+		load_button = (ImageButton) view.findViewById(R.id.top_bar_index);
+		load_button.setVisibility(View.VISIBLE);
+		load_button.setImageResource(R.drawable.update_btn_normal);
+		previous_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				PhotoListActivity.this.finish();
+			}
+
+		});
+		// 加载数据
+		load_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Toast.makeText(PhotoListActivity.this, "加载更多数据",
+						Toast.LENGTH_SHORT).show();
+				start = end;
+				end += perPageNum;
+				getDataFromDataBase(start, end);
+				adapter.notifyDataSetChanged();
+				//移动到最后
+				listView.setSelection(adapter.getCount());
+			}
+
+		});
 	}
 
 	@Override

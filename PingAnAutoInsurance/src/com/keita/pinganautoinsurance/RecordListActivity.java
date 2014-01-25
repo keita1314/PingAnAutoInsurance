@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 import com.keita.painganautoinsurance.entity.TextImage;
 
 import android.app.Activity;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,17 +30,19 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+/*
+ * 录音库页面
+ */
 public class RecordListActivity extends Activity {
 	private ListView listView = null;
 	private ArrayList<File> list = null;
 	private RecordAdapter adapter = null;
 	private SimpleDateFormat dateformat = null;
-	
+
 	/* 音频文件 */
-	private AudioTrack track = null;
+	private MediaRecorder mr;
+	private MediaPlayer mp;
 	private File recAudioFile = null;
-	private static int SAMPLE_RATE_IN_HZ = 8000;
 	boolean isPlaying = false;
 
 	@Override
@@ -47,18 +50,8 @@ public class RecordListActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_record_list);
-		ImageButton previous_button = null;
-		View view = findViewById(R.id.top_bar);
-		previous_button =(ImageButton) view.findViewById(R.id.top_bar_back);
-		previous_button.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				RecordListActivity.this.finish();
-			}
-			
-		});
+		// 设置标题栏
+		setTopBar();
 		list = new ArrayList<File>();
 		listView = (ListView) findViewById(R.id.record_list);
 		File fileDirectory = new File("/mnt/sdcard//PingAn/record");
@@ -66,11 +59,13 @@ public class RecordListActivity extends Activity {
 		dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if (fileDirectory.exists()) {
 			File[] childFile = fileDirectory.listFiles();
-			for (File f : childFile) {
-				list.add(f);
+			//按最近时间插入
+			for (int i = (childFile.length - 1); i >= 0; i--) {
+				list.add(childFile[i]);
 
 			}
-		} else
+		}
+		if (list.size() == 0)
 			Toast.makeText(this, "没有资源", Toast.LENGTH_SHORT).show();
 		adapter = new RecordAdapter(this, list);
 		listView.setAdapter(adapter);
@@ -80,6 +75,11 @@ public class RecordListActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
+		if (mp != null) {
+			mp.reset();
+			mp.release();
+			mp = null;
+		}
 		super.onDestroy();
 	}
 
@@ -121,89 +121,85 @@ public class RecordListActivity extends Activity {
 					.findViewById(R.id.record_name);
 			TextView recordDateTv = (TextView) itemView
 					.findViewById(R.id.record_date);
-			Button play_Btn = (Button)itemView.findViewById(R.id.play_btn);
-			Button stop_Btn = (Button)itemView.findViewById(R.id.stop_btn);
-			
+			Button play_Btn = (Button) itemView.findViewById(R.id.play_btn);
+			Button stop_Btn = (Button) itemView.findViewById(R.id.stop_btn);
+
 			recordNameTv.setText(currentFile.getName());
 			recordDateTv.setText(dateformat.format(new Date(currentFile
 					.lastModified())));
-			
+
 			final String filePath = currentFile.getAbsolutePath();
-			//播放
-			play_Btn.setOnClickListener(new OnClickListener(){
+			// 播放
+			play_Btn.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
 					new PlayAsyncTask().execute(filePath);
 				}
-				
+
 			});
-			stop_Btn.setOnClickListener(new OnClickListener(){
+			stop_Btn.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					isPlaying = false;
+					if (mp != null)
+						mp.stop();
 				}
-				
+
 			});
-				
-			
+
 			return itemView;
 		}
 	}
+
+	// 标题栏退出按钮
+	public void setTopBar() {
+
+		ImageButton previous_button = null;
+		View view = findViewById(R.id.top_bar);
+		TextView title = (TextView) view.findViewById(R.id.top_title);
+		title.setText("录音库");
+		previous_button = (ImageButton) view.findViewById(R.id.top_bar_back);
+		previous_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				RecordListActivity.this.finish();
+			}
+
+		});
+	}
+
 	// 异步播放
-		class PlayAsyncTask extends AsyncTask<String, Void, Void> {
+	class PlayAsyncTask extends AsyncTask<String, Void, Void> {
 
-			@Override
-			protected Void doInBackground(String... params) {
-				// TODO Auto-generated method stub
-				recAudioFile = new File(params[0]);
-				isPlaying = true;
-				int bufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE_IN_HZ,
-						AudioFormat.CHANNEL_CONFIGURATION_MONO,
-						AudioFormat.ENCODING_PCM_16BIT);
-				byte[] buffer = new byte[bufferSize];
-				try {
-					DataInputStream dis = new DataInputStream(
-							new BufferedInputStream(new FileInputStream(
-									recAudioFile)));
-					track = new AudioTrack(AudioManager.STREAM_MUSIC,
-							SAMPLE_RATE_IN_HZ,
-							AudioFormat.CHANNEL_CONFIGURATION_MONO,
-							AudioFormat.ENCODING_PCM_16BIT, bufferSize*4,
-							AudioTrack.MODE_STREAM);
-					// 开始播放
-					track.setStereoVolume(1.0f, 1.0f);
+		@Override
+		protected Void doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			recAudioFile = new File(params[0]);
+			isPlaying = true;
 
-					track.play();
-					while (isPlaying && dis.available() > 0) {
+			try {
+				mp = new MediaPlayer();
+				mp.setDataSource(recAudioFile.getAbsolutePath());
+				mp.prepare();
+				mp.start();
 
-						int i = 0;
-						while (dis.available() > 0 && i < buffer.length) {
-							// Log.v("Play", "isPlaying");
-							buffer[i] = dis.readByte();
-							i++;
-						}
-						track.write(buffer, 0, buffer.length);
-					}
-
-					// 播放结束
-					track.stop();
-					dis.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return null;
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-
-			@Override
-			protected void onPostExecute(Void result) {
-				// TODO Auto-generated method stub
-				super.onPostExecute(result);
-				
-			}
-			
+			return null;
 		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+
+		}
+
+	}
 }

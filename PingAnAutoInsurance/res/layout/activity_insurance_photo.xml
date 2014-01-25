@@ -1,51 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout
-    	 xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:background="#FFFFFF" >
-
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#F5F5F5" >
 
     <include
         android:id="@+id/top_bar"
-        layout="@layout/top_bar"
-        android:layout_alignParentTop="true" />
-	<LinearLayout
-	    android:id="@+id/photo_layout"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@id/top_bar"
-	    android:orientation="vertical" >
-	 <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="事故相关照片" />
-	
-    <Button
-        android:id="@+id/camera_btn"
+        android:layout_alignParentTop="true"
+        layout="@layout/top_bar" />
+
+    <LinearLayout
+        android:id="@+id/photo_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="拍照" />
-	</LinearLayout>
-    <ListView
+        android:layout_below="@id/top_bar"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="事故相关照片" 
+            android:textSize="16sp"
+            android:textColor="#000000"/>
+
+        <Button
+            android:id="@+id/camera_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:background="@drawable/btn_bg"
+            android:text="拍照"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_below="@id/photo_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+         >
+		<ListView
         android:id="@+id/photo_list"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_below="@id/photo_layout"
-        android:cacheColorHint="#00000000"
-        >
+        android:cacheColorHint="#00000000" >
     </ListView>
-	<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true"
-	    android:orientation="vertical" >
-	<Button 
-	    android:id="@+id/continue_btn"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    
-	    android:text="下一步"/>
-	</LinearLayout>
+        <Button
+            android:id="@+id/continue_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_above="@id/photo_list"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/btn_bg"
+            android:text="下一步"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
 </RelativeLayout>

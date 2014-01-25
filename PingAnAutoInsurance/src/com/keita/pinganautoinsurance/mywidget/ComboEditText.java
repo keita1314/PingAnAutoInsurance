@@ -1,8 +1,6 @@
 package com.keita.pinganautoinsurance.mywidget;
 
-/*
- * 可编辑可选择的输入框
- */
+
 import com.keita.pinganautoinsurance.R;
 
 import android.content.Context;
@@ -16,7 +14,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
+/*
+ * 自定义控件
+ * 可编辑可选择的输入框
+ */
 public class ComboEditText extends RelativeLayout {
 	private AutoCompleteTextView autoTextView;
 	private Button button;
@@ -50,11 +51,13 @@ public class ComboEditText extends RelativeLayout {
 		LayoutParams lp = new RelativeLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		//lp.addRule(RelativeLayout.ALIGN_RIGHT,autoTextView.getId());
+		lp.setMargins(0, 0, 5, 0);
 		lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
 		lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
 		lp.addRule(RelativeLayout.ALIGN_RIGHT,autoTextView.getId());
 		button = new Button(context);
-		button.setBackgroundResource(R.drawable.arrow_down);
+		button.setBackgroundResource(R.drawable.arrow_item);
+		
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override

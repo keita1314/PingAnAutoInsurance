@@ -18,6 +18,8 @@ import android.graphics.BitmapFactory;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,9 +31,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+/*
+ * 案件详情页面
+ */
 public class InsuranceViewActivity extends Activity {
-	private String insurancePolicyId = null;
+	private String insuranceCaseId = null;
 
 	private TextView caseNoTv = null;
 
@@ -80,7 +84,6 @@ public class InsuranceViewActivity extends Activity {
 	private String caseThirdCarNo = null;
 	private String caseThirdCarType = null;
 
-	private String insuracePolicyId = null;
 	private String hurtNumStr = "0";
 	private String deadNumStr = "0";
 	private String locationStr = "";
@@ -97,9 +100,10 @@ public class InsuranceViewActivity extends Activity {
 	SQLiteDatabase dataBase = null;
 
 	/* 音频文件 */
-	private AudioTrack track = null;
+
 	private File recAudioFile = null;
-	private static int SAMPLE_RATE_IN_HZ = 8000;
+	private MediaRecorder mr;
+	private MediaPlayer mp;
 	boolean isPlaying = false;
 	PlayAsyncTask play = null;
 
@@ -111,15 +115,17 @@ public class InsuranceViewActivity extends Activity {
 		setContentView(R.layout.activity_insurance_view);
 		ImageButton previous_button = null;
 		View view = findViewById(R.id.top_bar);
-		previous_button =(ImageButton) view.findViewById(R.id.top_bar_back);
-		previous_button.setOnClickListener(new OnClickListener(){
+		TextView title = (TextView) view.findViewById(R.id.top_title);
+		title.setText("案件详情");
+		previous_button = (ImageButton) view.findViewById(R.id.top_bar_back);
+		previous_button.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				InsuranceViewActivity.this.finish();
 			}
-			
+
 		});
 		caseNoTv = (TextView) findViewById(R.id.case_no);
 		caseOwnerTv = (TextView) findViewById(R.id.case_owner);
@@ -162,7 +168,7 @@ public class InsuranceViewActivity extends Activity {
 		dataBase = dbHelper.getReadableDatabase();
 
 		Intent intent = this.getIntent();
-		insuracePolicyId = intent.getStringExtra("insurancePolicyId");
+		insuranceCaseId = intent.getStringExtra("insuranceCaseId");
 		locationStr = intent.getStringExtra("location");
 		accidentDateStr = intent.getStringExtra("date");
 		if (locationStr != null)
@@ -172,7 +178,7 @@ public class InsuranceViewActivity extends Activity {
 		getDataFromDatabase();
 		setDataToInsurance();
 		setImageViewListener();
-		
+		//播放按钮
 		playBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -180,10 +186,12 @@ public class InsuranceViewActivity extends Activity {
 				// TODO Auto-generated method stub
 				playBtn.setClickable(false);
 				Log.v("play", "play");
-				if(recAudioFile!=null)
-					new PlayAsyncTask().execute();
-				else
-					Toast.makeText(InsuranceViewActivity.this, "找不到录音文件", Toast.LENGTH_SHORT).show();
+				if (recAudioFile != null) {
+					String filePath = recAudioFile.getAbsolutePath();
+					new PlayAsyncTask().execute(filePath);
+				} else
+					Toast.makeText(InsuranceViewActivity.this, "找不到录音文件",
+							Toast.LENGTH_SHORT).show();
 
 			}
 
@@ -195,8 +203,8 @@ public class InsuranceViewActivity extends Activity {
 				// TODO Auto-generated method stub
 				Log.v("stop", "stop");
 				// play.cancel(true);
-				
-				isPlaying = false;
+				if (mp != null)
+					mp.stop();
 				playBtn.setClickable(true);
 
 			}
@@ -210,15 +218,15 @@ public class InsuranceViewActivity extends Activity {
 		String text_id = null;
 		String photos_id = null;
 		String record_path = null;
-		Cursor cur = dbHelper.query(dataBase, "insurance_policy_table",
-				new String[] { "record_path", "photos_id", "text_id" },
-				"policy_id=?", new String[] { insuracePolicyId }, null, null,
-				null);
+		Cursor cur = dbHelper
+				.query(dataBase, "insurance_case_table", new String[] {
+						"record_path", "photos_id", "text_id" }, "case_id=?",
+						new String[] { insuranceCaseId }, null, null, null);
 		if (cur.moveToFirst()) {
 			text_id = cur.getString(cur.getColumnIndex("text_id"));
 			photos_id = cur.getString(cur.getColumnIndex("photos_id"));
 			record_path = cur.getString(cur.getColumnIndex("record_path"));
-			if(record_path	!= null)
+			if (record_path != null)
 				recAudioFile = new File(record_path);
 		}
 		cur.close();
@@ -228,70 +236,52 @@ public class InsuranceViewActivity extends Activity {
 					"text_id=?", new String[] { text_id }, null, null, null);
 			if (cur.moveToFirst()) {
 				caseNo = cur.getString(cur.getColumnIndex("case_no"));
-				System.out.println(caseNo);
 
 				caseOwner = cur.getString(cur.getColumnIndex("case_owner"));
-				System.out.println(caseOwner);
 
 				caseDriver = cur.getString(cur.getColumnIndex("case_driver"));
-				System.out.println("驾驶员"+caseDriver);
 
 				relationShip = cur.getString(cur.getColumnIndex("relation"));
-				System.out.println(relationShip);
-				
-				caseInsuranceId =  cur.getString(cur.getColumnIndex("case_insurance_id"));
-				System.out.println("保单"+caseInsuranceId);
-				
+
+				caseInsuranceId = cur.getString(cur
+						.getColumnIndex("case_insurance_id"));
+
 				caseOwnerPhone = cur.getString(cur
 						.getColumnIndex("case_owner_phone"));
-				System.out.println(caseOwnerPhone);
 
 				caseDriverPhone = cur.getString(cur
 						.getColumnIndex("case_driver_phone"));
-				System.out.println(caseDriverPhone);
 
 				caseDriverLicence = cur.getString(cur
 						.getColumnIndex("case_driver_lience"));
-				System.out.println(caseDriverLicence);
 
 				caseCarNo = cur.getString(cur.getColumnIndex("case_car_no"));
-				System.out.println(caseCarNo);
 
 				caseCarType = cur
 						.getString(cur.getColumnIndex("case_car_type"));
-				System.out.println(caseCarType);
 
 				caseCarVin = cur.getString(cur.getColumnIndex("vin"));
-				System.out.println(caseCarVin);
 
 				caseThirdCarNo = cur.getString(cur
 						.getColumnIndex("case_third_car_no"));
-				System.out.println(caseThirdCarNo);
 
 				caseThirdCarType = cur.getString(cur
 						.getColumnIndex("case_third_car_type"));
-				System.out.println(caseThirdCarType);
 
 				hurtNumStr = cur.getString(cur.getColumnIndex("hurt_num"));
-				System.out.println(hurtNumStr);
 
 				deadNumStr = cur.getString(cur.getColumnIndex("dead_num"));
-				System.out.println(deadNumStr);
-				
+
 				caseLossStr = cur.getString(cur.getColumnIndex("case_loss"));
-				System.out.println("物损"+caseLossStr);
-				
+
 				caseReasonStr = cur
 						.getString(cur.getColumnIndex("case_reason"));
-				System.out.println(caseReasonStr);
 
 				accidentReasonStr = cur.getString(cur
 						.getColumnIndex("accident_reason"));
-				System.out.println(accidentReasonStr);
 
 				accidentDetailStr = cur.getString(cur
 						.getColumnIndex("accident_detail"));
-				System.out.println(accidentDetailStr);
 
 			}
 			cur.close();
@@ -302,7 +292,8 @@ public class InsuranceViewActivity extends Activity {
 		Cursor cur_img = null;
 		if (photos_id != null) {
 			cur = dbHelper.query(dataBase, "insurance_photo_table", null,
-					"id = ?", new String[] { photos_id }, null, null, null);
+					"photos_id = ?", new String[] { photos_id }, null, null,
+					null);
 			if (cur.moveToFirst()) {
 				for (int i = 0; i < 6; i++) {
 
@@ -310,8 +301,8 @@ public class InsuranceViewActivity extends Activity {
 							+ "_id"));
 					if (imgId[i] != null) {
 						cur_img = dbHelper.query(dataBase, "text_image_table",
-								null, "id = ?", new String[] { imgId[i] },
-								null, null, null);
+								null, "text_img_id = ?",
+								new String[] { imgId[i] }, null, null, null);
 						if (cur_img.moveToFirst())
 							imgPath[i] = cur_img.getString(cur_img
 									.getColumnIndex("img_path"));
@@ -321,21 +312,15 @@ public class InsuranceViewActivity extends Activity {
 				cur.close();
 			}
 		}
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inSampleSize = 8;
-		InputStream is = null;
-		Bitmap bitmap = null;
+
+		
 
 		for (int i = 0; i < imgPath.length; i++) {
 			if (imgPath[i] != null) {
 				try {
-					is = new FileInputStream(imgPath[i]);
-					bitmap = BitmapFactory.decodeStream(is, null, options);
-					is.close();
-					bitmapArray[i] = ThumbnailUtils.extractThumbnail(bitmap,
-							80, 80);
-
-					bitmap.recycle();
+					System.gc();
+					bitmapArray[i] = BitMapUtil.getSmallBitmap(imgPath[i]);
+					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -364,11 +349,9 @@ public class InsuranceViewActivity extends Activity {
 			relationShipTv.setText(relationShip);
 		else
 			relationShipTv.setText("空");
-		if (caseInsuranceId != null){
+		if (caseInsuranceId != null) {
 			caseInsuranceIdTv.setText(caseInsuranceId);
-			System.out.println("保单2"+caseInsuranceId);
-		}
-		else
+		} else
 			caseInsuranceIdTv.setText("空");
 		if (caseOwnerPhone != null)
 			caseOwnerPhoneTv.setText(caseOwnerPhone);
@@ -418,7 +401,7 @@ public class InsuranceViewActivity extends Activity {
 			deadNumTv.setText(deadNumStr);
 		else
 			deadNumTv.setText("空");
-		if(caseLossStr != null)
+		if (caseLossStr != null)
 			caseLossTv.setText(caseLossStr);
 		else
 			caseLossTv.setText("空");
@@ -578,44 +561,40 @@ public class InsuranceViewActivity extends Activity {
 		});
 	}
 
+	// 标题栏退出按钮
+	public void setTopBar() {
+
+		ImageButton previous_button = null;
+		View view = findViewById(R.id.top_bar);
+		TextView title = (TextView) view.findViewById(R.id.top_title);
+		title.setText("案件详情");
+		previous_button = (ImageButton) view.findViewById(R.id.top_bar_back);
+		previous_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				InsuranceViewActivity.this.finish();
+			}
+
+		});
+	}
+
 	// 异步播放
-	class PlayAsyncTask extends AsyncTask<Void, Void, Void> {
+	class PlayAsyncTask extends AsyncTask<String, Void, Void> {
 
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected Void doInBackground(String... params) {
 			// TODO Auto-generated method stub
+			recAudioFile = new File(params[0]);
 			isPlaying = true;
-			int bufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE_IN_HZ,
-					AudioFormat.CHANNEL_CONFIGURATION_MONO,
-					AudioFormat.ENCODING_PCM_16BIT);
-			byte[] buffer = new byte[bufferSize];
+
 			try {
-				DataInputStream dis = new DataInputStream(
-						new BufferedInputStream(new FileInputStream(
-								recAudioFile)));
-				track = new AudioTrack(AudioManager.STREAM_MUSIC,
-						SAMPLE_RATE_IN_HZ,
-						AudioFormat.CHANNEL_CONFIGURATION_MONO,
-						AudioFormat.ENCODING_PCM_16BIT, bufferSize*4,
-						AudioTrack.MODE_STREAM);
-				// 开始播放
-				track.setStereoVolume(1.0f, 1.0f);
+				mp = new MediaPlayer();
+				mp.setDataSource(recAudioFile.getAbsolutePath());
+				mp.prepare();
+				mp.start();
 
-				track.play();
-				while (isPlaying && dis.available() > 0) {
-
-					int i = 0;
-					while (dis.available() > 0 && i < buffer.length) {
-						// Log.v("Play", "isPlaying");
-						buffer[i] = dis.readByte();
-						i++;
-					}
-					track.write(buffer, 0, buffer.length);
-				}
-
-				// 播放结束
-				track.stop();
-				dis.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -627,8 +606,9 @@ public class InsuranceViewActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			playBtn.setClickable(true);
+
 		}
-		
+
 	}
 
 	@Override
@@ -636,16 +616,19 @@ public class InsuranceViewActivity extends Activity {
 		// TODO Auto-generated method stub
 
 		super.onDestroy();
-		if (track != null) {
-			track.stop();
-			track.release();
+		if (mp != null) {
+			mp.stop();
+			mp.release();
+			mp = null;
 		}
 		dataBase.close();
 		dbHelper.close();
 		// 回收图片内存
 		for (int i = 0; i < bitmapArray.length; i++) {
-			if (bitmapArray[i] != null)
+			if (bitmapArray[i]!=null && !bitmapArray[i].isRecycled())
 				bitmapArray[i].recycle();
+				bitmapArray[i] = null;
 		}
+		System.gc();
 	}
 }

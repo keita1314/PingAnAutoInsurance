@@ -45,7 +45,7 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 /**
  
- *
+ *定位页面 使baidu API
  */
 public class InsuranceLocationActivity extends Activity {
 
@@ -73,10 +73,10 @@ public class InsuranceLocationActivity extends Activity {
 	boolean isRequest = false;// 是否手动触发请求定位
 	boolean isFirstLoc = true;// 是否首次定位
 	boolean isLocationClientStop = false;
-	
 	// 定位地址
 	private EditText locationAddress;
 	String address = "";
+	private MyApplication application = null;
 	//下一步按钮
 	private Button continueBtn = null;
 	
@@ -86,14 +86,20 @@ public class InsuranceLocationActivity extends Activity {
 		mBMapMan = new BMapManager(getApplication());
 		mBMapMan.init("2F64E03AC6D24CC96C4713F921D8B653D2FC8747", null);
 		setContentView(R.layout.activity_insurance_location_gps);
+		application = (MyApplication)this.getApplication();
+		//把本Activity放入管理list中
+		//application.getActivityList().add(this);
 		ImageButton previous_button = null;
 		View view = findViewById(R.id.top_bar);
+		TextView title =(TextView) view.findViewById(R.id.top_title);
+		title.setText("事故定位");
 		previous_button =(ImageButton) view.findViewById(R.id.top_bar_back);
 		previous_button.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				application.getActivityList().remove(this);
 				InsuranceLocationActivity.this.finish();
 			}
 			
@@ -101,7 +107,22 @@ public class InsuranceLocationActivity extends Activity {
 		locationAddress = (EditText) findViewById(R.id.location_text);
 		requestLocButton = (Button) findViewById(R.id.button1);
 		continueBtn = (Button)findViewById(R.id.continue_btn);
-		OnClickListener btnClickListener = new OnClickListener() {
+	
+		//设置监听事件
+		continueBtn.setOnClickListener( new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				// 跳转到下一步
+				Intent intent = new Intent();
+				intent.putExtra("location", locationAddress.getText().toString());
+				intent.setClass(InsuranceLocationActivity.this, InsurancePhotoActivity.class);
+				startActivity(intent);
+				InsuranceLocationActivity.this.finish();
+			}
+		});
+		requestLocButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -109,23 +130,7 @@ public class InsuranceLocationActivity extends Activity {
 				// 手动定位请求
 				requestLocClick();
 			}
-		};
-		OnClickListener ContinueBtnClickListener = new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				// 跳转到下一步
-				Intent intent = new Intent();
-				intent.putExtra("location", address);
-				intent.setClass(InsuranceLocationActivity.this, InsurancePhotoActivity.class);
-				startActivity(intent);
-				InsuranceLocationActivity.this.finish();
-			}
-		};
-		//设置监听事件
-		requestLocButton.setOnClickListener(btnClickListener);
-		continueBtn.setOnClickListener(ContinueBtnClickListener);
+		});
 		
 
 		// 地图初始化
@@ -147,7 +152,7 @@ public class InsuranceLocationActivity extends Activity {
 		LocationClientOption option = new LocationClientOption();
 		option.setOpenGps(true);// 打开gps
 		option.setCoorType("bd09ll"); // 设置坐标类型
-		option.setScanSpan(30000);
+		option.setScanSpan(10000);
 		option.setAddrType("all");
 		//option.setPriority(LocationClientOption.NetWorkFirst);
 		mLocClient.setLocOption(option);
@@ -222,7 +227,7 @@ public class InsuranceLocationActivity extends Activity {
 				address = location.getAddrStr();
 				if (address != null) {
 					locationAddress.setText(address);
-					System.out.println(address);
+					
 				}
 			}
 			if(address == null){

@@ -1,5 +1,7 @@
 package com.keita.pinganautoinsurance;
-
+/*
+ * 案件拍照页面
+ */
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -25,6 +27,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
@@ -72,10 +75,11 @@ public class InsurancePhotoActivity extends Activity {
 	private String insurance_photo_id = null;
 	private String photo_name = null;
 	private String location = "";
-	//数据库操作
+	// 数据库操作
 	DBHelper dbHelper = null;
 	SQLiteDatabase dataBase = null;
-	
+	// 全局application
+	private MyApplication application = null;
 	private SimpleDateFormat dateformat = null;
 
 	@Override
@@ -83,28 +87,22 @@ public class InsurancePhotoActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_insurance_photo);
-		ImageButton previous_button = null;
-		View view = findViewById(R.id.top_bar);
-		previous_button =(ImageButton) view.findViewById(R.id.top_bar_back);
-		previous_button.setOnClickListener(new View.OnClickListener(){
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				InsurancePhotoActivity.this.finish();
-			}
-			
-		});
+		application = (MyApplication) this.getApplication();
+		// application.getActivityList().add(this);
+		// 标题栏的设置
+		setTopBar();
 		cameraBtn = (Button) findViewById(R.id.camera_btn);
 		photo_listview = (ListView) findViewById(R.id.photo_list);
 		continueBtn = (Button) findViewById(R.id.continue_btn);
 		textImage_list = new ArrayList<TextImage>();
 		dbHelper = new DBHelper(this);
-   	 	dataBase = dbHelper.getWritableDatabase();
+		dataBase = dbHelper.getWritableDatabase();
 		adapter = new TextImageAdapter(this, textImage_list);
 		location = this.getIntent().getStringExtra("location");
-		//格式化时间
-		dateformat =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Toast.makeText(InsurancePhotoActivity.this, "建议横屏拍摄效果更好",
+				Toast.LENGTH_SHORT).show();
+		// 格式化时间
+		dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		// 检测SD卡存在
 		isSDExist();
@@ -135,7 +133,7 @@ public class InsurancePhotoActivity extends Activity {
 							View arg1, int position, long id) {
 						// TODO Auto-generated method stub
 						final int pos = position;
-						System.out.println(position);
+						// 提示对话框
 						new AlertDialog.Builder(InsurancePhotoActivity.this)
 								.setTitle("删除照片").setMessage("你确定要删除当前照片")
 								.setNegativeButton("取消", null)
@@ -149,17 +147,21 @@ public class InsurancePhotoActivity extends Activity {
 												.get(pos).getImagePath());
 										if (file.exists())
 											file.delete();
-										//从数据库中删去照片
-										String[] args ={textImage_list.get(pos).getImageId()};
-										dbHelper.deleteData(dataBase, "id=?", args, "text_image_table");
-										
+										// 从数据库中删去照片
+										String id =  textImage_list.get(
+												pos).getImageId();
+										if(id!=null){
+										dbHelper.deleteData(dataBase,
+												"text_image_table", "text_img_id=?",
+												new String[] {id});
+
 										textImage_list.get(pos).recycle();
 										textImage_list.remove(pos);
 										photoSumNum--;
 										adapter.notifyDataSetChanged();
 
 									}
-
+									}	
 								}).show();
 						return false;
 					}
@@ -179,9 +181,10 @@ public class InsurancePhotoActivity extends Activity {
 							+ photo_name + ".jpg";
 					imageUri = Uri.fromFile(new File(photo_abs_dir));
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
 					startActivityForResult(intent, 1);
 				} else
-					Toast.makeText(InsurancePhotoActivity.this, "最多只能存储5张图片",
+					Toast.makeText(InsurancePhotoActivity.this, "最多只能存储6张图片",
 							Toast.LENGTH_SHORT).show();
 			}
 
@@ -192,31 +195,33 @@ public class InsurancePhotoActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//把所有的照片插入一个当数据库的保单图片集表中
-				if(textImage_list.size() >0){
-				ContentValues cv  = new ContentValues();
-				for(int i=0;i<textImage_list.size();i++){
-					String imgId = "img" +(i+1)+"_id";
-					cv.put(imgId, textImage_list.get(i).getImageId());
-				}
-				dbHelper.insertData(dataBase, cv, "insurance_photo_table");
-				String[] id = {"id"};
-				Cursor cur = dbHelper.queryByCol(dataBase, "insurance_photo_table",id);
-				if(cur.moveToLast()) {
+				// 把所有的照片插入一个当数据库的保单图片集表中
+				if (textImage_list.size() > 0) {
+					ContentValues cv = new ContentValues();
+					for (int i = 0; i < textImage_list.size(); i++) {
+						String imgId = "img" + (i + 1) + "_id";
+						cv.put(imgId, textImage_list.get(i).getImageId());
+					}
+					dbHelper.insertData(dataBase, cv, "insurance_photo_table");
+					String[] id = { "photos_id" };
+					Cursor cur = dbHelper.queryByCol(dataBase,
+							"insurance_photo_table", id);
+					if (cur.moveToLast()) {
 						cur.moveToLast();
-						insurance_photo_id = cur.getString(cur.getColumnIndex("id"));
-						System.out.println("照片ID"+insurance_photo_id);
-				
-				}
-				Intent intent = new Intent();
-				intent.putExtra("location", location);
-				intent.putExtra("insurance_photo_id", insurance_photo_id);
-				intent.setClass(InsurancePhotoActivity.this,
-						InsuranceTextActivity.class);
-				startActivity(intent);
-				InsurancePhotoActivity.this.finish();
-				}else
-					Toast.makeText(InsurancePhotoActivity.this, "请拍摄最少一张照片", Toast.LENGTH_SHORT).show();
+						insurance_photo_id = cur.getString(cur
+								.getColumnIndex("photos_id"));
+
+					}
+					Intent intent = new Intent();
+					intent.putExtra("location", location);
+					intent.putExtra("insurance_photo_id", insurance_photo_id);
+					intent.setClass(InsurancePhotoActivity.this,
+							InsuranceTextActivity.class);
+					startActivity(intent);
+					InsurancePhotoActivity.this.finish();
+				} else
+					Toast.makeText(InsurancePhotoActivity.this, "请拍摄最少一张照片",
+							Toast.LENGTH_SHORT).show();
 
 			}
 
@@ -231,15 +236,15 @@ public class InsurancePhotoActivity extends Activity {
 
 			if (isSDExist) {
 				TextImage textImage = new TextImage();
-				BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inSampleSize = 2;
-				InputStream is = null;
 				Bitmap bitmap = null;
+				File file = null;
+				FileOutputStream fos = null;
 				try {
-					is = new FileInputStream(photo_abs_dir);
-					bitmap = BitmapFactory.decodeStream(is, null, options);
-					is.close();
-				} catch (Exception e) {
+					//对照片进行处理防止OOM
+					System.gc();
+					bitmap = BitMapUtil.getSmallBitmap(photo_abs_dir);
+
+				} catch (OutOfMemoryError e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -278,8 +283,8 @@ public class InsurancePhotoActivity extends Activity {
 							bitmap = rotateBitmap;
 						}
 						// 重新把bitmap写到本地
-						File file = new File(photo_abs_dir);
-						FileOutputStream fos = new FileOutputStream(file);
+						file = new File(photo_abs_dir);
+						fos = new FileOutputStream(file);
 						bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
 						fos.flush();
 						fos.close();
@@ -290,19 +295,15 @@ public class InsurancePhotoActivity extends Activity {
 					e.printStackTrace();
 				}
 				
-				Bitmap newBitmap = ThumbnailUtils.extractThumbnail(bitmap, 120,
-						120);
-				bitmap.recycle();
-				bitmap = null;
 				textImage.setImageId(photo_name);
-				textImage.setImage(newBitmap);
+				textImage.setImage(bitmap);
 				textImage.setImagePath(photo_abs_dir);
-				
+
 				textImage.setImageDate(dateformat.format(new Date()));
 				textImage_list.add(textImage);
-				//插入数据库的表中
+				// 插入数据库的表中
 				ContentValues cv = new ContentValues();
-				cv.put("id", textImage.getImageId());
+				cv.put("text_img_id", textImage.getImageId());
 				cv.put("img_path", textImage.getImagePath());
 				cv.put("img_text", textImage.getText());
 				cv.put("img_date", textImage.getImageDate());
@@ -320,12 +321,13 @@ public class InsurancePhotoActivity extends Activity {
 			if (comment == null)
 				Log.v("comment", "comment is null");
 			textImage_list.get(currentPosition).setText(comment);
-			String[] id = {textImage_list.get(currentPosition).getImageId()};
+			String[] id = { textImage_list.get(currentPosition).getImageId() };
 			ContentValues cv = new ContentValues();
 			cv.put("img_text", comment);
-			dbHelper.updateData(dataBase, "text_image_table", cv, "id = ?", id);
+			dbHelper.updateData(dataBase, "text_image_table", cv,
+					"text_img_id = ?", id);
 			adapter.notifyDataSetChanged();
-			
+
 		}
 
 	}
@@ -355,6 +357,29 @@ public class InsurancePhotoActivity extends Activity {
 		} else
 			isSDExist = false;
 
+	}
+
+	// 设置标题栏
+	public void setTopBar() {
+		ImageButton previous_button = null;
+		ImageButton index_button = null;
+		View view = findViewById(R.id.top_bar);
+		TextView title = (TextView) view.findViewById(R.id.top_title);
+		title.setText("事故相片");
+		previous_button = (ImageButton) view.findViewById(R.id.top_bar_back);
+		index_button = (ImageButton) view.findViewById(R.id.top_bar_index);
+		previous_button.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				application.getActivityList().remove(this);
+				InsurancePhotoActivity.this.finish();
+
+			}
+
+		});
+		
 	}
 
 	// 定义adapter

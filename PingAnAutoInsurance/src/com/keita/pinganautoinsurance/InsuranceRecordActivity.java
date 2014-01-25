@@ -10,11 +10,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.keita.painganautoinsurance.entity.InsurancePolicy;
+import com.keita.painganautoinsurance.entity.InsuranceCase;
+import com.keita.painganautoinsurance.entity.Template;
 import com.keita.pinganautoinsurance.database.DBHelper;
 import com.keita.pinganautoinsurance.mywidget.ComboEditText;
 
@@ -28,6 +30,7 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -50,16 +53,20 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-
+/*
+ * 案件录音页面 有少量文本记录
+ */
 public class InsuranceRecordActivity extends Activity {
 	private EditText hurtNum = null;
 	private EditText deadNum = null;
 	private EditText accidentDetail = null;
-	private EditText caseLoss = null;
+	private ComboEditText caseLoss = null;
 	private ComboEditText caseReason = null;
 	private ComboEditText accidentReason = null;
 
@@ -82,8 +89,8 @@ public class InsuranceRecordActivity extends Activity {
 	private String accidentReasonStr = "";
 	private String accidentDetailStr = "";
 
-	// 保单
-	InsurancePolicy insurancePolicy = null;
+	// 理赔案件
+	InsuranceCase insuranceCase = null;
 
 	private String caseNo = "";
 	private String caseOwner = "";
@@ -99,9 +106,9 @@ public class InsuranceRecordActivity extends Activity {
 	private String caseThirdCarNo = "";
 	private String caseThirdCarType = "";
 
-	private AudioRecord ar;
-	private int bs;
-	private static int SAMPLE_RATE_IN_HZ =  8000;
+	private MediaRecorder mr;
+	private MediaPlayer mp;
+
 	/* 录制音频文件 */
 	private File recAudioFile = null;
 	DataOutputStream dos = null;
@@ -117,11 +124,29 @@ public class InsuranceRecordActivity extends Activity {
 	SQLiteDatabase dataBase = null;
 	private SimpleDateFormat dateformat = null;
 
+	private MyApplication application = null;
+	// 模板相关
+	private boolean isInsert = false;
+	private String templateName = null;
+	private ArrayList<Template> templateList = null;
+	private int templatePosition = 0;
+	String[] caseLossArray = null;
+	String[] caseReasonArray = null;
+	String[] accidentReasonArray = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_insurance_record);
+
+		application = (MyApplication) this.getApplication();
+		application.getActivityList().add(this);
+		// 标题栏的设置
+		setTopBar();
+		// 获得模版
+		templateList = application.getTemplateList();
+
 		record_btn = (Button) findViewById(R.id.record_btn);
 		record_stop_btn = (Button) findViewById(R.id.record_stop_btn);
 		record_play_btn = (Button) findViewById(R.id.record_play_btn);
@@ -129,20 +154,28 @@ public class InsuranceRecordActivity extends Activity {
 		hurtNum = (EditText) findViewById(R.id.hurt_num);
 		deadNum = (EditText) findViewById(R.id.dead_num);
 		accidentDetail = (EditText) findViewById(R.id.accident_detail);
-		caseLoss = (EditText) findViewById(R.id.case_loss);
+		caseLoss = (ComboEditText) findViewById(R.id.case_loss);
 
 		// 格式化时间
 		dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		dbHelper = new DBHelper(this);
 		dataBase = dbHelper.getWritableDatabase();
-		
-		final String[] caseReasonArray = { "碰撞", "倾覆", "火灾", "爆炸", "自燃", "盗抢",
-				"外界物体坠落", "外界物体倒塌", "雷击", "暴风", "暴雨", "洪水", "雹灾", "玻璃延烧",
-				"行驶中玻璃爆裂", "被砸", "其它" };
-		final String[] accidentReasonArray = { "制动失灵", "转向失灵", "其它机械故障",
-				"疲劳驾驶", "闯红灯", "逆向行驶", "安全距离不够", "超速行驶", "违章装载", "违章并线",
-				"其它违章行驶", "忽大意、措施失当", "其它" };
+
+		// application中取出 事件 为ComboEdit控件设置adapter
+		caseLossArray = new String[application.getCarLossList().size()];
+		for (int i = 0; i < application.getCarLossList().size(); i++) {
+			caseLossArray[i] = application.getCarLossList().get(i);
+		}
+		caseReasonArray = new String[application.getCaseReasonList().size()];
+		for (int i = 0; i < application.getCaseReasonList().size(); i++) {
+			caseReasonArray[i] = application.getCaseReasonList().get(i);
+		}
+
+		accidentReasonArray = new String[application.getAccidentList().size()];
+		for (int i = 0; i < application.getAccidentList().size(); i++) {
+			accidentReasonArray[i] = application.getAccidentList().get(i);
+		}
 		// 设置adapter
 		caseAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, caseReasonArray);
@@ -152,22 +185,24 @@ public class InsuranceRecordActivity extends Activity {
 				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		accidentAdapter
 				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-		
+
 		caseReason = (ComboEditText) findViewById(R.id.case_reason);
 		accidentReason = (ComboEditText) findViewById(R.id.accident_reason);
 
 		caseReason.setAdapter(caseReasonArray);
 		accidentReason.setAdapter(accidentReasonArray);
+		caseLoss.setAdapter(caseLossArray);
+
 		Intent intent = this.getIntent();
-		// 新建一份保单
-		insurancePolicy = new InsurancePolicy();
-		insurancePolicy.setLocation(intent.getStringExtra("location"));
-		insurancePolicy.setInsurancePhotoId(intent
+
+		// 新建一份案件
+		insuranceCase = new InsuranceCase();
+		insuranceCase.setLocation(intent.getStringExtra("location"));
+		insuranceCase.setInsurancePhotoId(intent
 				.getStringExtra("insurance_photo_id"));
-		insurancePolicy.setDate(dateformat.format(new Date()));
+		insuranceCase.setDate(dateformat.format(new Date()));
 		caseNo = intent.getStringExtra("caseNoStr");
 		caseDriver = intent.getStringExtra("caseDriverStr");
-		System.out.println(caseDriver);
 		caseOwner = intent.getStringExtra("caseOwnerStr");
 		caseInsuranceId = intent.getStringExtra("caseInsuranceIdStr");
 		relationShip = intent.getStringExtra("relationShipStr");
@@ -179,6 +214,9 @@ public class InsuranceRecordActivity extends Activity {
 		caseCarVin = intent.getStringExtra("caseCarVinStr");
 		caseThirdCarNo = intent.getStringExtra("caseThirdCarNoStr");
 		caseThirdCarType = intent.getStringExtra("caseThirdCarTypeStr");
+
+		isInsert = intent.getBooleanExtra("isInsert", false);
+		templatePosition = intent.getIntExtra("templatePosition", 0);
 
 		/* 检测SD卡存在 */
 		if (Environment.getExternalStorageState().equals(
@@ -198,7 +236,7 @@ public class InsuranceRecordActivity extends Activity {
 			}
 
 		} else {
-			Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT);
+			Toast.makeText(this, "SD卡不存在", Toast.LENGTH_SHORT).show();
 		}
 
 		// 录音按钮监听
@@ -207,79 +245,49 @@ public class InsuranceRecordActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				save_case_btn.setClickable(false);
 				recording_toast = Toast.makeText(getApplicationContext(),
 						" 正在录音  ", Toast.LENGTH_SHORT);
 				record_animate = new ImageView(getApplicationContext());
 
 				recording_toast.setGravity(Gravity.CENTER, 0, 0);
-				record_animate.setImageResource(R.drawable.record_animate_02);
+				record_animate.setImageResource(R.drawable.record_animate);
 				toast_view = (LinearLayout) recording_toast.getView();
 				toast_view.addView(record_animate, 0);
 				recording_toast.setView(toast_view);
+				mr = new MediaRecorder();
+				mr.setAudioSource(MediaRecorder.AudioSource.MIC);
+				mr.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+				mr.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
 
-				bs = AudioRecord.getMinBufferSize(SAMPLE_RATE_IN_HZ,
-						AudioFormat.CHANNEL_CONFIGURATION_MONO,
-						AudioFormat.ENCODING_PCM_16BIT);
-				ar = new AudioRecord(MediaRecorder.AudioSource.MIC,
-						SAMPLE_RATE_IN_HZ,
-						AudioFormat.CHANNEL_CONFIGURATION_MONO,
-						AudioFormat.ENCODING_PCM_16BIT, bs * 10);
 				try {
 					Date now = new Date();
 					record_name = Long.toString(now.getTime());
 					recAudioFile = new File(recordDir.getAbsolutePath()
-							+ "/RECORD_" + record_name + ".pcm");
+							+ "/REC_" + record_name + ".amr");
 					recAudioFile.createNewFile();
-					insurancePolicy.setRecordPath(recAudioFile
-							.getAbsolutePath());
-
-					dos = new DataOutputStream(new BufferedOutputStream(
-							new FileOutputStream(recAudioFile)));
+					insuranceCase.setRecordPath(recAudioFile.getAbsolutePath());
+					mr.setOutputFile(recAudioFile.getAbsolutePath());
+					mr.prepare();
+					mr.start();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				ar.startRecording();
-				isShowing = true;
+				
+				/* ar.startRecording(); */
+
 				Log.v("test", "录音");
-				timer = new Timer();
+				isShowing = true;
 				isRecording = true;
+				timer = new Timer();
 				timer.schedule(new TimerTask() {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
 
 						while (isShowing && isRecording) {
-
-							// 用于读取的
-							byte[] buffer = new byte[bs];
-							int r = ar.read(buffer, 0, bs);
-							int v = 0;
-							// 将 buffer 内容取出
-							for (int i = 0; i < buffer.length; i++) {
-
-								try {
-									if (dos != null)
-										dos.write(buffer[i]);
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								v += buffer[i] * buffer[i];
-							}
-							// 平方和除以数据总长度，得到音量大小。可以获取白噪声值，然后对实际采样进行标准化。
-							Log.d("spl", String.valueOf(v / (float) r));
-							int volume = 0;
-							if (r != 0)
-								volume = v / r;
-							else
-								volume = 2400;
-							// 根据音量大小设置动画
-							Message msg = new Message();
-							msg.what = volume;
-							handler.sendMessage(msg);
 							recording_toast.show();
-
 						}
 					}
 
@@ -295,23 +303,17 @@ public class InsuranceRecordActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				if (isRecording) {
+					save_case_btn.setClickable(true);
 					isShowing = false;
 					Log.v("test", "停止");
-
-					/*try {
-						dos.close();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}*/
-
-					ar.stop();
-					ar.release();
-					ar = null;
+					mr.release();
+					mr = null;
 					isRecording = false;
 					timer.cancel();
 					toast_view.setVisibility(View.INVISIBLE);
 					recording_toast.cancel();
+					record_play_btn.setClickable(true);
+					
 
 				}
 			}
@@ -323,15 +325,11 @@ public class InsuranceRecordActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				/*
-				 * Intent intent = new Intent();
-				 * intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				 * intent.setAction(android.content.Intent.ACTION_VIEW);
-				 * intent.setDataAndType(Uri.fromFile(recAudioFile), "audio");
-				 * startActivity(intent);
-				 */
 				Log.v("Play", "Play");
+				
+				record_play_btn.setClickable(false);
 				new PlayAsyncTask().execute();
+				
 			}
 
 		});
@@ -341,15 +339,12 @@ public class InsuranceRecordActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				/*
-				 * System.out.println(caseReason.getText());
-				 * System.out.println(accidentReason.getText());
-				 */
+
 				if (!hurtNum.getText().toString().equals(""))
 					hurtNumStr = hurtNum.getText().toString();
 				if (!deadNum.getText().toString().equals(""))
 					deadNumStr = deadNum.getText().toString();
-				if(caseLoss.getText().toString() != null)
+				if (caseLoss.getText().toString() != null)
 					caseLossStr = caseLoss.getText().toString();
 				if (accidentDetail.getText().toString() != null)
 					accidentDetailStr = accidentDetail.getText().toString();
@@ -358,10 +353,8 @@ public class InsuranceRecordActivity extends Activity {
 				cv.put("case_no", caseNo);
 				cv.put("case_owner", caseOwner);
 				cv.put("case_driver", caseDriver);
-				System.out.println("driver"+caseDriver);
 				cv.put("relation", relationShip);
 				cv.put("case_insurance_id", caseInsuranceId);
-				System.out.println("caseInsuranceId"+caseInsuranceId);
 				cv.put("case_owner_phone", caseOwnerPhone);
 				cv.put("case_driver_phone", caseDriverPhone);
 				cv.put("case_driver_lience", caseDriverLicence);
@@ -384,38 +377,62 @@ public class InsuranceRecordActivity extends Activity {
 						"insurance_text_table", id);
 				if (cur != null) {
 					cur.moveToLast();
-					insurancePolicy.setTextId(cur.getString(cur
+					insuranceCase.setTextId(cur.getString(cur
 							.getColumnIndex("text_id")));
-					System.out.println(insurancePolicy.getTextId());
 					cur.close();
 				}
 
 				cv.clear();
 				cv = new ContentValues();
-				System.out.println("reco" + insurancePolicy.getLocation());
-				cv.put("location", insurancePolicy.getLocation());
-				cv.put("record_path", insurancePolicy.getRecordPath());
-				cv.put("date", insurancePolicy.getDate());
-				cv.put("photos_id", insurancePolicy.getInsurancePhotoId());
-				System.out.println("photo"+insurancePolicy.getInsurancePhotoId());
-				cv.put("text_id", insurancePolicy.getTextId());
-				dbHelper.insertData(dataBase, cv, "insurance_policy_table");
+
+				cv.put("location", insuranceCase.getLocation());
+				cv.put("record_path", insuranceCase.getRecordPath());
+				cv.put("date", insuranceCase.getDate());
+				cv.put("photos_id", insuranceCase.getInsurancePhotoId());
+				cv.put("text_id", insuranceCase.getTextId());
+				dbHelper.insertData(dataBase, cv, "insurance_case_table");
+
+				// 从数据库中取出最后一个案件
+				cur = dbHelper.query(dataBase, "insurance_case_table", null,
+						null, null, null, null, null);
+				if (cur.moveToLast()) {
+					insuranceCase.setId(cur.getString(cur
+							.getColumnIndex("case_id")));
+				}
+				cur.close();
 				Intent intent = new Intent();
+				intent.putExtra("insuranceCaseId", insuranceCase.getId());
+				intent.putExtra("date", insuranceCase.getDate());
+				intent.putExtra("location", insuranceCase.getLocation());
 				intent.setClass(InsuranceRecordActivity.this,
-						InsuranceListActivity.class);
+						InsuranceViewActivity.class);
 				startActivity(intent);
+				int activitynum = application.getActivityList().size();
+				for (int i = activitynum - 1; i >= 0; i--) {
+
+					Activity prevActivity = (Activity) application
+							.getActivityList().get(i);
+					prevActivity.finish();
+				}
 				InsuranceRecordActivity.this.finish();
 			}
 
 		});
+		if (isInsert == true)
+			insertTemplate();
 	}
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		isShowing = false;
+		isRecording = false;
 		if (timer != null)
 			timer.cancel();
+		if(recording_toast!=null){
+			recording_toast.cancel();
+		}
 		try {
 			if (dos != null)
 				dos.close();
@@ -423,79 +440,58 @@ public class InsuranceRecordActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//释放录音
+		if(mr!=null){
+			mr.release();
+			mr = null;
+		}
 		Log.v("test", "destory");
 		dataBase.close();
 		dbHelper.close();
 	}
 
-	// 根据声音大小 更新UI带动画效果
-	private Handler handler = new Handler() {
+	// 设置标题栏
+	public void setTopBar() {
+		ImageButton previous_button = null;
+		ImageButton index_button = null;
+		View view = findViewById(R.id.top_bar);
+		TextView title = (TextView) view.findViewById(R.id.top_title);
+		title.setText("案件录音");
+		previous_button = (ImageButton) view.findViewById(R.id.top_bar_back);
+		index_button = (ImageButton) view.findViewById(R.id.top_bar_index);
+		previous_button.setOnClickListener(new View.OnClickListener() {
 
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			super.handleMessage(msg);
-			Log.v("handler", "" + msg.what);
-			toast_view = (LinearLayout) recording_toast.getView();
-			toast_view.removeViewAt(0);
-			// 根据音量大小显示不同的图片 数值是由录音计算出的音量大小
-			if (msg.what > 2400 && msg.what < 2500) {
-				record_animate.setImageResource(R.drawable.record_animate_03);
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				//若不在录音 可正常退出
+				if(isRecording == false){
+				application.getActivityList().remove(this);
+				InsuranceRecordActivity.this.finish();
+				}
+				
 			}
-			if (msg.what > 2500 && msg.what < 2600) {
-				record_animate.setImageResource(R.drawable.record_animate_04);
 
+		});
+		index_button.setVisibility(View.VISIBLE);
+		index_button.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.v("test", "record index");
+				//若不在录音 可正常退出
+				if(isRecording == false){
+				int activityNum = application.getActivityList().size();
+				for (int i = activityNum - 1; i >= 0; i--) {
+					application.getActivityList().get(i).finish();
+					application.getActivityList().remove(i);
+				}
 			}
-			if (msg.what > 2600 && msg.what < 2700) {
-				record_animate.setImageResource(R.drawable.record_animate_05);
-
+				
 			}
-			if (msg.what > 2700 && msg.what < 2800) {
-				record_animate.setImageResource(R.drawable.record_animate_06);
-
-			}
-			if (msg.what > 2800 && msg.what < 2900) {
-				record_animate.setImageResource(R.drawable.record_animate_07);
-
-			}
-			if (msg.what > 2900 && msg.what < 3000) {
-				record_animate.setImageResource(R.drawable.record_animate_08);
-
-			}
-			if (msg.what > 3000 && msg.what < 3100) {
-				record_animate.setImageResource(R.drawable.record_animate_09);
-
-			}
-			if (msg.what > 3100 && msg.what < 3200) {
-				record_animate.setImageResource(R.drawable.record_animate_09);
-
-			}
-			if (msg.what > 3200 && msg.what < 3300) {
-				record_animate.setImageResource(R.drawable.record_animate_10);
-
-			}
-			if (msg.what > 3300 && msg.what < 3400) {
-				record_animate.setImageResource(R.drawable.record_animate_11);
-
-			}
-			if (msg.what > 3400 && msg.what < 3500) {
-				record_animate.setImageResource(R.drawable.record_animate_12);
-
-			}
-			if (msg.what > 3500 && msg.what < 3600) {
-				record_animate.setImageResource(R.drawable.record_animate_13);
-
-			}
-			if (msg.what > 3600) {
-				record_animate.setImageResource(R.drawable.record_animate_14);
-
-			} else if (msg.what < 2400)
-				record_animate.setImageResource(R.drawable.record_animate_01);
-			toast_view.addView(record_animate, 0);
-			recording_toast.setView(toast_view);
-		}
-
-	};
+		});
+	}
 
 	// 判断文件是否存在
 	public boolean isFileExist(String fileName) {
@@ -510,40 +506,47 @@ public class InsuranceRecordActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 			// TODO Auto-generated method stub
 			isPlaying = true;
-			int bufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE_IN_HZ,
-					AudioFormat.CHANNEL_CONFIGURATION_MONO,
-					AudioFormat.ENCODING_PCM_16BIT);
-			byte[] buffer = new byte[bufferSize];
-			try {
-				DataInputStream dis = new DataInputStream(
-						new BufferedInputStream(new FileInputStream(
-								recAudioFile)));
-				AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC,
-						SAMPLE_RATE_IN_HZ,
-						AudioFormat.CHANNEL_CONFIGURATION_MONO,
-						AudioFormat.ENCODING_PCM_16BIT, bufferSize*4 ,
-						AudioTrack.MODE_STREAM);
-				// 开始播放
-				track.setStereoVolume(1.0f, 1.0f);
-				track.play();
-				while (isPlaying && dis.available() > 0) {
 
-					int i = 0;
-					while (dis.available() > 0 && i < buffer.length) {
-						Log.v("Play", "isPlaying");
-						buffer[i] = dis.readByte();
-						i++;
-					}
-					track.write(buffer, 0, buffer.length);
+			try {
+
+				mp = new MediaPlayer();
+				if (recAudioFile != null) {
+					mp.setDataSource(recAudioFile.getAbsolutePath());
+					mp.prepare();
+					mp.start();
 				}
-				// 播放结束
-				track.stop();
-				dis.close();
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
 			return null;
 		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			record_play_btn.setClickable(true);
+		}
+		
+	}
+
+	// 插入模板
+
+	public void insertTemplate() {
+
+		Template template = templateList.get(templatePosition);
+		hurtNum.setText(template.getHurtNum());
+		deadNum.setText(template.getDeadNum());
+		caseLoss.setText(template.getCaseLoss());
+		caseReason.setText(template.getCarReason());
+		accidentReason.setText(template.getAccidentReason());
+		accidentDetail.setText(template.getAccidentDetail());
+		// 重新设计自定义控件的下拉内容
+		caseLoss.setAdapter(caseLossArray);
+		caseReason.setAdapter(caseReasonArray);
+		accidentReason.setAdapter(accidentReasonArray);
 
 	}
 }

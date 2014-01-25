@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
+/*
+ * 数据库访问类
+ */
 public class DBHelper extends SQLiteOpenHelper {
 
 	@Override
@@ -22,7 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final int DATABSE_VERSION = 1;
 	// 表名
 	// 保单表
-	private static final String INSURANCE_POLICY_TABLE = "insurance_policy_table";
+	private static final String INSURANCE_CASE_TABLE = "insurance_case_table";
 	// 带评论的照片表
 	private static final String TEXT_IMAGE_TABLE = "text_image_table";
 	// 保单对应图片表
@@ -33,11 +35,11 @@ public class DBHelper extends SQLiteOpenHelper {
 	// 创建表的sql语句
 	private static final String TEXT_IMAGE_TABLE_SQL = "CREATE TABLE "
 			+ TEXT_IMAGE_TABLE
-			+ "(id integer primary key,img_path text,img_text text,img_date text);";
+			+ "(text_img_id integer primary key,img_path text,img_text text,img_date text);";
 
 	private static final String INSURANCE_PHOTO_TABLE_SQL = "CREATE TABLE "
 			+ INSURANCE_PHOTO_TABLE
-			+ "(id integer primary key autoincrement,img1_id integer,img2_id integer ,"
+			+ "(photos_id integer primary key autoincrement,img1_id integer,img2_id integer ,"
 			+ "img3_id integer ,img4_id integer ,img5_id integer ,img6_id integer,"
 			+ "foreign key(img1_id) references text_image_table(id),foreign key(img2_id) references text_image_table(id),"
 			+ "foreign key(img3_id) references text_image_table(id) ,foreign key(img4_id) references text_image_table(id)"
@@ -50,8 +52,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			+ "case_third_car_no text,case_third_car_type,hurt_num integer,dead_num integer,case_loss text,case_reason text,accident_reason text,"
 			+ "accident_detail text);";
 	private static final String INSURANCE_POLICY_SQL = "CREATE TABLE "
-			+ INSURANCE_POLICY_TABLE
-			+ "(policy_id integer primary key autoincrement,location text,record_path text,date text,photos_id integer,text_id integer,"
+			+ INSURANCE_CASE_TABLE
+			+ "(case_id integer primary key autoincrement,location text,record_path text,date text,photos_id integer,text_id integer,"
 			+ "foreign key(photos_id) references insurance_photo_table(id),foreign key(text_id) references insurance_text_table(text_id));";
 
 	public DBHelper(Context context) {
@@ -83,20 +85,27 @@ public class DBHelper extends SQLiteOpenHelper {
 		if (tableName.equals(INSURANCE_TEXT_TABLE)) {
 			db.insert(tableName, "text_id", cv);
 		}
-		if (tableName.equals(INSURANCE_POLICY_TABLE)) {
-			db.insert(tableName, "policy_id", cv);
+		if (tableName.equals(INSURANCE_CASE_TABLE)) {
+			db.insert(tableName, "case_id", cv);
 		}
 	}
-
-	public void deleteData(SQLiteDatabase db, String whereClause,
-			String[] whereArgs, String tableName) {
+	//删除数据
+	public void deleteData(SQLiteDatabase db, String tableName,
+			String whereClause, String[] whereArgs) {
 		if (tableName.equals(TEXT_IMAGE_TABLE)) {
+			db.delete(tableName, whereClause, whereArgs);
+		}
+		if(tableName.equals(INSURANCE_CASE_TABLE)){
+			db.delete(tableName, whereClause, whereArgs);
+		}
+		if(tableName.equals(INSURANCE_PHOTO_TABLE)){
 			db.delete(tableName, whereClause, whereArgs);
 		}
 	}
 
-	public void updateData(SQLiteDatabase db,String table,ContentValues values, String whereClause, String[] whereArgs) {
-			db.update(table, values, whereClause, whereArgs);
+	public void updateData(SQLiteDatabase db, String table,
+			ContentValues values, String whereClause, String[] whereArgs) {
+		db.update(table, values, whereClause, whereArgs);
 	};
 
 	// 按列查询

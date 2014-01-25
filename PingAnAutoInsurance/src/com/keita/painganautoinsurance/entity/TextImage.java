@@ -1,5 +1,7 @@
 package com.keita.painganautoinsurance.entity;
-
+/*
+ * 带评论的图片
+ */
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Parcel;

@@ -41,40 +41,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="报案号"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_no"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dip"
-                    android:layout_marginTop="5dip"
-                    android:background="#DCDCDC" />
-
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-                    android:layout_marginTop="10dip" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:text="被保险人"
-                        android:textColor="#000000" />
-
-                    <TextView
-                        android:id="@+id/case_owner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -95,13 +71,46 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="驾驶员"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_driver"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:layout_marginTop="5dip"
+                    android:background="#DCDCDC" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
+                    android:layout_marginTop="10dip" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="被保险人"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/case_owner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -122,13 +131,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="被保险人与驾驶员关系"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/relationship"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -148,14 +160,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:text="保单号"
-                        android:textColor="#000000" />
+                        android:text="对应保单号"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_insurance_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -176,13 +191,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="被保险人电话"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_owner_phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -203,13 +221,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="驾驶员电话"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_driver_phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -230,13 +251,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="驾驶证号"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_driver_licence"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -257,13 +281,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="车牌号码"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_car_no"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -284,13 +311,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="车型"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_car_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -311,13 +341,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="VIN码"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_car_vin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -338,13 +371,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="三者车牌"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_third_car_no"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -365,13 +401,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="三者车型"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_third_car_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -391,8 +430,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:text="事故第三方人身伤亡"
-                        android:textColor="#000000" />
+                        android:text="事故伤亡"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -405,24 +445,29 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="伤:"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/hurt_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="死:"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/dead_num"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000"
+                            android:textSize="16sp" />
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -440,17 +485,22 @@
                     android:layout_marginTop="10dip" >
 
                     <TextView
+                        android:id="@+id/location_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
+                        android:layout_marginRight="5dip"
                         android:text="事故地点"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_below="@id/location_text"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -471,13 +521,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="事故物损"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_loss"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -498,13 +551,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="出险原因"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/case_reason"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -525,13 +581,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="事故原因"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/accident_reason"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -551,14 +610,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:text="事故时间"
-                        android:textColor="#000000" />
+                        android:text="记录时间"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/accident_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
@@ -579,13 +641,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="发生事故经过情况描述"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/accident_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="100dip"
-                        android:layout_toRightOf="@id/text_detail" />
+                        android:layout_toRightOf="@id/text_detail"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -610,21 +675,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="录音"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <Button
                         android:id="@+id/play_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="50dip"
-                        android:text="播放" />
+                        android:background="@drawable/play_bg" />
 
                     <Button
                         android:id="@+id/stop_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dip"
-                        android:text="停止" />
+                        android:background="@drawable/stop_bg" />
                 </LinearLayout>
 
                 <View
@@ -644,12 +710,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="事故照片"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dip"
+                        android:layout_marginLeft="15dip"
                         android:orientation="vertical" >
 
                         <LinearLayout

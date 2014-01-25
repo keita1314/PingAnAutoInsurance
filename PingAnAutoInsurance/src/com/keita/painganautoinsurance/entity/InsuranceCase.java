@@ -3,15 +3,15 @@ package com.keita.painganautoinsurance.entity;
 import java.util.ArrayList;
 
 /*
- * 保单类的实现
+ * 案件类的实现 与对案件表相对应
  */
-public class InsurancePolicy {
+public class InsuranceCase {
 	private String id = null;
 	private String location = null;
 	private String insurancePhotoId = null;
 	private String textId = null;
 	private String Date = null;
-	
+
 	
 	public String getId() {
 		return id;

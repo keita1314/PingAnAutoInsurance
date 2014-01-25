@@ -1,74 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="fill_parent"
-     android:layout_height="fill_parent"
-     android:orientation="vertical"
-     android:background="#FFFFFF">
-         <include
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#F5F5F5"
+    android:orientation="vertical" >
+
+    <include
         android:id="@+id/top_bar"
-        layout="@layout/top_bar"
-        android:layout_alignParentTop="true" />
-     <TextView 
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="对事故地点进行定位"
-         android:textColor="#000000"/>
-     <LinearLayout 
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:orientation="horizontal" >
-         <TextView 
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:textColor="#000000"
-             android:text="地点："/>
-     <EditText 
-         android:id="@+id/location_text"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:background="@drawable/edit_background"/>
-     </LinearLayout>
-<RelativeLayout
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-    <com.keita.pinganautoinsurance.MyLocationMapView
-         android:id="@+id/bmapView"
-	    android:layout_width="fill_parent" android:layout_height="fill_parent" 
-	    android:clickable="true"     
-	/>
-    <!--  <LinearLayout
+        android:layout_alignParentTop="true"
+        layout="@layout/top_bar" />
+
+    <TextView
         android:layout_width="wrap_content"
-        android:minWidth="100dip"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:background="#D000"
-        android:orientation="vertical"
-        android:padding="2dp" 
-        android:layout_marginTop="80dip">
+        android:text="对事故地点进行定位"
+        android:textColor="#000000"
+        android:textSize="16sp" />
 
-      <RadioGroup android:id="@+id/radioGroup" android:contentDescription="定位icon" android:layout_width="wrap_content" android:layout_height="wrap_content">
- 			<RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/defaulticon" android:text="默认图标" android:checked="true"></RadioButton>
-			<RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/customicon" android:text="自定义图标"></RadioButton>    
-		</RadioGroup> 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
-    </LinearLayout> -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="地点："
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
-     <Button
-         android:id="@+id/button1"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentRight="true"
-         android:layout_alignParentTop="true"
-         android:layout_marginRight="25dp"
-         android:layout_marginTop="10dip"
-         android:background="@drawable/custom_loc"  />
+        <EditText
+            android:id="@+id/location_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_background" />
+    </LinearLayout>
 
-     <Button 
-    android:id="@+id/continue_btn"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:text="下一步"/>
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <com.keita.pinganautoinsurance.MyLocationMapView
+            android:id="@+id/bmapView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:clickable="true" />
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/custom_loc" />
+
+        <Button
+            android:id="@+id/continue_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/btn_bg"
+            android:text="下一步"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
 </LinearLayout>

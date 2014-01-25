@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF" >
+    android:background="#F5F5F5"
+    android:orientation="vertical" >
+    <include
+            android:id="@+id/top_bar"
+            layout="@layout/top_bar" />
+    
+<ScrollView 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
-
-        <include
-            android:id="@+id/top_bar"
-            layout="@layout/top_bar" />
-
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -21,6 +25,20 @@
             android:layout_marginRight="3dp"
             android:layout_marginTop="3dp"
             android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/insert_template_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:background="@drawable/btn_bg"
+                android:text="插入情景模板"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:layout_marginTop="5dip"
+                android:background="#DCDCDC" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -38,18 +56,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="被保险人"
-                android:textColor="#000000" />
-
-            <EditText
-                android:id="@+id/case_owner"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_background" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="驾驶员"
                 android:textColor="#000000" />
 
@@ -62,7 +68,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="保单号"
+                android:text="被保险人"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/case_owner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_background" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="对应保单号"
                 android:textColor="#000000" />
 
             <EditText
@@ -145,11 +163,10 @@
                 android:text="车型"
                 android:textColor="#000000" />
 
-            <EditText
+            <com.keita.pinganautoinsurance.mywidget.ComboEditText
                 android:id="@+id/case_car_type"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_background" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -180,11 +197,10 @@
                 android:text="三者车型"
                 android:textColor="#000000" />
 
-            <EditText
+            <com.keita.pinganautoinsurance.mywidget.ComboEditText
                 android:id="@+id/case_third_car_type"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_background" />
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -192,11 +208,14 @@
 
                 <Button
                     android:id="@+id/continue_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="下一步" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dip"
+                    android:background="@drawable/btn_bg"
+                    android:text="下一步"
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
 </ScrollView>
+</LinearLayout>

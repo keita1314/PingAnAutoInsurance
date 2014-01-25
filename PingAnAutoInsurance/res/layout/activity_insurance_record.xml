@@ -1,115 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-     android:background="#FFFFFF" >
-<LinearLayout 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-   >
-       <include android:id="@+id/top_bar" 
-        	layout="@layout/top_bar"/>
-       <TextView 
-           android:layout_height="wrap_content"
-           android:layout_width="wrap_content"
-           android:text="事故第三方人身伤亡"
-           android:textColor="#000000"/>
-       <LinearLayout 
-           android:layout_width="fill_parent"
-           android:layout_height="wrap_content"
-           android:orientation="horizontal">
-       <TextView 
-           android:layout_height="wrap_content"
-           android:layout_width="wrap_content"
-           android:textColor="#000000"
-           android:text="伤:"/>
-        <EditText
-           android:id="@+id/hurt_num"
-           android:layout_height="wrap_content"
-           android:layout_width="wrap_content"
-           android:numeric="integer"
-           android:hint="0"/>
-         <TextView 
-           android:layout_height="wrap_content"
-           android:layout_width="wrap_content"
-           android:textColor="#000000"
-           android:text="死:"/>
-        <EditText
-           android:id="@+id/dead_num"
-           android:layout_height="wrap_content"
-           android:layout_width="wrap_content"
-           android:numeric="integer"
-           android:hint="0"/>
-          </LinearLayout>
-           <TextView 
-           android:layout_height="wrap_content"
-           android:layout_width="wrap_content"
-           android:textColor="#000000"
-           android:text="事故物损"/>
-          <EditText
-              android:id="@+id/case_loss"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/edit_background"
-              />
-          <TextView 
-           android:layout_height="wrap_content"
-           android:layout_width="wrap_content"
-           android:textColor="#000000"
-           android:text="出险原因"/>
-          <com.keita.pinganautoinsurance.mywidget.ComboEditText
-              android:id="@+id/case_reason"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              />
-          <TextView 
-           android:layout_height="wrap_content"
-           android:layout_width="wrap_content"
-           android:textColor="#000000"
-           android:text="事故原因"/>
-          <com.keita.pinganautoinsurance.mywidget.ComboEditText
-              android:id="@+id/accident_reason"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              />
-          <TextView 
-           android:layout_height="wrap_content"
-           android:layout_width="wrap_content"
-           android:textColor="#000000"
-           android:text="发生事故经过情况描述"/>
-          <EditText
-              android:id="@+id/accident_detail"
-              android:layout_width="fill_parent"
-              android:layout_height="100dp"
-              android:background="@drawable/edit_background"/>
-          <LinearLayout 
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal">
-          <Button 
-              android:id="@+id/record_btn"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-           	
-              android:text="开始录音"/>
-          <Button 
-              android:id="@+id/record_stop_btn"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-            
-              android:text="停止录音"/>
-          </LinearLayout>
-          <Button 
-              android:id="@+id/record_play_btn"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="播放录音"/>
-          <Button 
-              android:id="@+id/save_case_btn"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="保存案件"/>
-    </LinearLayout>
-</ScrollView>
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
 
+    <include
+        android:id="@+id/top_bar"
+        layout="@layout/top_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="事故伤亡"
+                android:textColor="#000000" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="伤:"
+                    android:textColor="#000000" />
+
+                <EditText
+                    android:id="@+id/hurt_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:numeric="integer" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="死:"
+                    android:textColor="#000000" />
+
+                <EditText
+                    android:id="@+id/dead_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:numeric="integer" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="事故物损"
+                android:textColor="#000000" />
+
+            <com.keita.pinganautoinsurance.mywidget.ComboEditText
+                android:id="@+id/case_loss"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="出险原因"
+                android:textColor="#000000" />
+
+            <com.keita.pinganautoinsurance.mywidget.ComboEditText
+                android:id="@+id/case_reason"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="事故原因"
+                android:textColor="#000000" />
+
+            <com.keita.pinganautoinsurance.mywidget.ComboEditText
+                android:id="@+id/accident_reason"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="发生事故经过情况描述"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/accident_detail"
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:background="@drawable/edit_background" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/record_btn"
+                    android:layout_width="80dip"
+                    android:layout_height="40dip"
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/btn_bg"
+                    android:text="开始录音"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/record_stop_btn"
+                    android:layout_width="80dip"
+                    android:layout_height="40dip"
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/btn_bg"
+                    android:text="停止录音"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/record_play_btn"
+                    android:layout_width="80dip"
+                    android:layout_height="40dip"
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/btn_bg"
+                    android:text="播放录音"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/save_case_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/btn_bg"
+                android:text="保存案件"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -11,7 +11,7 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar" >
         <service
@@ -37,15 +37,15 @@
         <activity android:name="com.keita.pinganautoinsurance.PhotoCommentActivity" />
         <activity android:name="com.keita.pinganautoinsurance.InsuranceLocationActivity" />
         <activity android:name="com.keita.pinganautoinsurance.InsuranceTextActivity" />
-         <activity android:name="com.keita.pinganautoinsurance.InsuranceListActivity" />
-         <activity android:name="com.keita.pinganautoinsurance.InsuranceViewActivity" />
-         <activity android:name="com.keita.pinganautoinsurance.PhotoViewActivity" />
-         <activity android:name="com.keita.pinganautoinsurance.PhotoListActivity" />
-         <activity android:name="com.keita.pinganautoinsurance.RecordListActivity" />
-         <activity android:name="com.keita.pinganautoinsurance.TemplateListActivity" />
-         <activity android:name="com.keita.pinganautoinsurance.CreateTemplateActivity" />
-          <activity android:name="com.keita.pinganautoinsurance.AddEventActivity" />
-        
+        <activity android:name="com.keita.pinganautoinsurance.InsuranceListActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.InsuranceViewActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.PhotoViewActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.PhotoListActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.RecordListActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.TemplateListActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.CreateTemplateActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.AddEventActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.AboutMeActivity" />
     </application>
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
