@@ -6,6 +6,8 @@ import android.content.Intent;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
@@ -47,7 +49,7 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
  
  *定位页面 使baidu API
  */
-public class InsuranceLocationActivity extends Activity {
+public class InsuranceLocationActivity extends ActionBarActivity {
 
 	// 定位相关
 	LocationClient mLocClient;
@@ -80,6 +82,8 @@ public class InsuranceLocationActivity extends Activity {
 	//下一步按钮
 	private Button continueBtn = null;
 	
+	private ActionBar actionBar = null;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,7 +93,7 @@ public class InsuranceLocationActivity extends Activity {
 		application = (MyApplication)this.getApplication();
 		//把本Activity放入管理list中
 		//application.getActivityList().add(this);
-		ImageButton previous_button = null;
+		/*ImageButton previous_button = null;
 		View view = findViewById(R.id.top_bar);
 		TextView title =(TextView) view.findViewById(R.id.top_title);
 		title.setText("事故定位");
@@ -103,7 +107,12 @@ public class InsuranceLocationActivity extends Activity {
 				InsuranceLocationActivity.this.finish();
 			}
 			
-		});
+		});*/
+		actionBar = getSupportActionBar();
+		actionBar.setTitle("事故定位");
+		actionBar.show();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		
 		locationAddress = (EditText) findViewById(R.id.location_text);
 		requestLocButton = (Button) findViewById(R.id.button1);
 		continueBtn = (Button)findViewById(R.id.continue_btn);

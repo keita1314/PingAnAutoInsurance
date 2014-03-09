@@ -36,6 +36,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,8 +59,9 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class InsurancePhotoActivity extends Activity {
+public class InsurancePhotoActivity extends ActionBarActivity {
 
+	private ActionBar actionBar = null;
 	private Button cameraBtn = null;
 	private Button continueBtn = null;
 	private String SDPath = null;
@@ -361,7 +364,7 @@ public class InsurancePhotoActivity extends Activity {
 
 	// 设置标题栏
 	public void setTopBar() {
-		ImageButton previous_button = null;
+		/*ImageButton previous_button = null;
 		ImageButton index_button = null;
 		View view = findViewById(R.id.top_bar);
 		TextView title = (TextView) view.findViewById(R.id.top_title);
@@ -378,7 +381,11 @@ public class InsurancePhotoActivity extends Activity {
 
 			}
 
-		});
+		});*/
+		actionBar = getSupportActionBar();
+		actionBar.show();
+		actionBar.setTitle("事故相片");
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 	}
 

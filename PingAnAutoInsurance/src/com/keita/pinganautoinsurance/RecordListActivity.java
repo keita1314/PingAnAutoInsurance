@@ -19,6 +19,8 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,11 +35,13 @@ import android.widget.Toast;
 /*
  * 录音库页面
  */
-public class RecordListActivity extends Activity {
+public class RecordListActivity extends ActionBarActivity {
 	private ListView listView = null;
 	private ArrayList<File> list = null;
 	private RecordAdapter adapter = null;
 	private SimpleDateFormat dateformat = null;
+	
+	private ActionBar actionBar = null;
 
 	/* 音频文件 */
 	private MediaRecorder mr;
@@ -157,7 +161,7 @@ public class RecordListActivity extends Activity {
 	// 标题栏退出按钮
 	public void setTopBar() {
 
-		ImageButton previous_button = null;
+		/*ImageButton previous_button = null;
 		View view = findViewById(R.id.top_bar);
 		TextView title = (TextView) view.findViewById(R.id.top_title);
 		title.setText("录音库");
@@ -170,7 +174,11 @@ public class RecordListActivity extends Activity {
 				RecordListActivity.this.finish();
 			}
 
-		});
+		});*/
+		actionBar = getSupportActionBar();
+		actionBar.show();
+		actionBar.setTitle("录音库");
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	// 异步播放

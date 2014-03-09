@@ -1,11 +1,32 @@
 package com.keita.pinganautoinsurance;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.protocol.HTTP;
+
+
+
 
 import com.keita.pinganautoinsurance.database.DBHelper;
 
@@ -92,7 +113,8 @@ public class InsuranceViewActivity extends Activity {
 	private String accidentReasonStr = "";
 	private String accidentDetailStr = "";
 	private String accidentDateStr = "";
-
+	
+	private String[] imgPath = new String[] { null, null, null, null, null, null };
 	private Bitmap bitmapArray[] = null;
 	String[] imgId = null;
 	// 数据库操作
@@ -106,6 +128,9 @@ public class InsuranceViewActivity extends Activity {
 	private MediaPlayer mp;
 	boolean isPlaying = false;
 	PlayAsyncTask play = null;
+	
+	/*上传文件按钮*/
+	private Button uploadButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +183,8 @@ public class InsuranceViewActivity extends Activity {
 
 		playBtn = (Button) findViewById(R.id.play_btn);
 		stopBtn = (Button) findViewById(R.id.stop_btn);
+		
+		uploadButton = (Button) findViewById(R.id.insurance_upload);
 
 		bitmapArray = new Bitmap[] { null, null, null, null, null, null };
 
@@ -209,6 +236,16 @@ public class InsuranceViewActivity extends Activity {
 
 			}
 
+		});
+		/*上传保单*/
+		uploadButton.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				upload();
+			}
+			
 		});
 	}
 
@@ -288,7 +325,7 @@ public class InsuranceViewActivity extends Activity {
 		}
 		// 从照片表中得到数据
 
-		String[] imgPath = new String[] { null, null, null, null, null, null };
+		
 		Cursor cur_img = null;
 		if (photos_id != null) {
 			cur = dbHelper.query(dataBase, "insurance_photo_table", null,
@@ -610,7 +647,80 @@ public class InsuranceViewActivity extends Activity {
 		}
 
 	}
+	/*上传函数*/
+	public void upload(){
+		Toast.makeText(this, "开始上传", Toast.LENGTH_SHORT);
+		String url = "http://192.168.1.102:8080/AdminDemo/upload.action";
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpPost httpPost = new HttpPost(url);
+		MultipartEntity entity = new MultipartEntity();
 
+		int status;
+		
+		FileBody record_body = new FileBody(recAudioFile);
+		FileBody img_body[] = new FileBody[]{null,null,null,null,null,null};
+		for(int i = 0;i<imgPath.length;i++){
+			if(imgPath[i] != null )
+				img_body[i] = new FileBody(new File(imgPath[i]));
+		}
+		try {
+			System.out.println(locationStr);
+			entity.addPart("location", new StringBody(locationStr,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("date", new StringBody(accidentDateStr));
+			entity.addPart("case_no", new StringBody(caseNo));
+			entity.addPart("insurance_no", new StringBody(caseInsuranceId));
+			entity.addPart("insurance_owner", new StringBody(caseOwner,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("insurance_driver", new StringBody(caseDriver,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("relationship", new StringBody(relationShip,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("insurance_owner_phone", new StringBody(
+					caseOwnerPhone));
+			entity.addPart("insurance_driver_phone", new StringBody(
+					caseDriverPhone));
+			entity.addPart("insurance_driver_liencese", new StringBody(
+					caseDriverLicence,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("car_no", new StringBody(caseCarNo,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("car_type", new StringBody(caseCarType,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("vin", new StringBody(caseCarVin));
+			entity.addPart("third_car_no", new StringBody(caseThirdCarNo,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("third_car_type", new StringBody(caseThirdCarType,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("hurt_num", new StringBody(hurtNumStr));
+			entity.addPart("loss", new StringBody(caseLossStr,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("case_reason", new StringBody(caseReasonStr,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("accident_reason", new StringBody(accidentReasonStr,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("accident_detail", new StringBody(accidentDetailStr,Charset.forName(HTTP.UTF_8)));
+			entity.addPart("record", record_body);
+			for(int i = 0;i<img_body.length;i++){
+				if(img_body[i] != null)
+					entity.addPart("img"+i, img_body[i]);
+			}
+			
+			httpPost.setEntity(entity);
+			httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 35000);
+			status = httpClient.execute(httpPost).getStatusLine().getStatusCode();
+			if (status == HttpStatus.SC_OK)
+			{
+				Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
+				System.out.println("上传成功"+status);
+				// 上传成功
+			} else
+			{
+				Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
+				System.out.println("上传失败"+status);
+				// 上传失败
+			}
+
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub

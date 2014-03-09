@@ -10,6 +10,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,11 +26,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
+
+
 /*
  * 主菜单页 以girdvie的形式显示
  * 作者关基达
  */
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 	private Button create_btn = null;
 	private Button view_btn = null;
 	private Button photo_btn = null;
@@ -38,12 +43,14 @@ public class MainActivity extends Activity {
 	private ImageButton previous_button = null;
 	private ArrayList<HashMap<String, Object>> lstImageItem = null;
 	private SimpleAdapter simpleAdapter = null;
+	private ActionBar actionBar = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		//设置标题栏
+		
 		setTopBar();
 		gridView = (GridView) findViewById(R.id.gridview);
 		lstImageItem = new ArrayList<HashMap<String, Object>>();
@@ -128,30 +135,37 @@ public class MainActivity extends Activity {
 	// 标题栏退出按钮
 	public void setTopBar() {
 
-		ImageButton previous_button = null;
+		/*ImageButton previous_button = null;
 		View view = findViewById(R.id.top_bar);
 		TextView title = (TextView) view.findViewById(R.id.top_title);
 		title.setText("理赔快捷通");
 		previous_button = (ImageButton) view.findViewById(R.id.top_bar_back);
-		previous_button.setVisibility(View.INVISIBLE);
+		previous_button.setVisibility(View.INVISIBLE);*/
+		
+		actionBar = getSupportActionBar();
+		actionBar.show();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
-
+	
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent();
-		intent.setClass(MainActivity.this, AboutMeActivity.class);
-		startActivity(intent);
-		return super.onMenuItemSelected(featureId, item);
-		
-		
-		}
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.menu_about:
+	            Intent intent = new Intent();
+	            intent.setClass(MainActivity.this, AboutMeActivity.class);
+	            startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
 	
 }

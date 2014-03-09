@@ -19,6 +19,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -39,7 +41,7 @@ import android.widget.Toast;
 /*
  * 案件列表页面
  */
-public class InsuranceListActivity extends Activity {
+public class InsuranceListActivity extends ActionBarActivity {
 	private ListView listView = null;
 	private EditText searchEditText = null;
 	private ListAdapter listAdapter = null;
@@ -47,6 +49,7 @@ public class InsuranceListActivity extends Activity {
 	private ArrayList<CaseListItem> caseList = null;
 	// private ArrayList<String> driver = null;
 	private ArrayList<CaseListItem> searchCaseList = null;
+	private ActionBar actionBar = null;
 	
 	// 数据库操作
 	DBHelper dbHelper = null;
@@ -300,7 +303,7 @@ public class InsuranceListActivity extends Activity {
 	// 标题栏退出按钮
 	public void setTopBar() {
 
-		ImageButton previous_button = null;
+		/*ImageButton previous_button = null;
 		ImageButton load_button = null;
 		View view = findViewById(R.id.top_bar);
 		TextView title = (TextView) view.findViewById(R.id.top_title);
@@ -333,7 +336,11 @@ public class InsuranceListActivity extends Activity {
 				listView.setSelection(listAdapter.getCount());
 			}
 
-		});
+		});*/
+		actionBar = getSupportActionBar();
+		actionBar.show();
+		actionBar.setTitle("事故列表");
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	// 根据保单Id获得第一张图作为缩略图

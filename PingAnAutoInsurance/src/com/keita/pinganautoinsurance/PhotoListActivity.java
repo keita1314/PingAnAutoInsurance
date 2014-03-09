@@ -18,6 +18,8 @@ import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +36,7 @@ import android.widget.AdapterView.OnItemClickListener;
 /*
  * 照片库页面
  */
-public class PhotoListActivity extends Activity {
+public class PhotoListActivity extends ActionBarActivity {
 	private ListView listView = null;
 	private TextImage textImage = null;
 	private ArrayList<TextImage> list = null;
@@ -49,6 +51,8 @@ public class PhotoListActivity extends Activity {
 	private int perPageNum = 6;
 	private int start = 0;
 	private int end = 0;
+	
+	private ActionBar actionBar = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +184,7 @@ public class PhotoListActivity extends Activity {
 	// 标题栏退出按钮
 	public void setTopBar() {
 
-		ImageButton previous_button = null;
+		/*ImageButton previous_button = null;
 		ImageButton load_button = null;
 		View view = findViewById(R.id.top_bar);
 		TextView title = (TextView) view.findViewById(R.id.top_title);
@@ -214,7 +218,11 @@ public class PhotoListActivity extends Activity {
 				listView.setSelection(adapter.getCount());
 			}
 
-		});
+		});*/
+		actionBar = getSupportActionBar();
+		actionBar.show();
+		actionBar.setTitle("照片库");
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override

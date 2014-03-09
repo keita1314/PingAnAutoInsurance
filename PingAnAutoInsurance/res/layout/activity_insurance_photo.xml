@@ -4,10 +4,10 @@
     android:layout_height="fill_parent"
     android:background="#F5F5F5" >
 
-    <include
+    <!-- <include
         android:id="@+id/top_bar"
         android:layout_alignParentTop="true"
-        layout="@layout/top_bar" />
+        layout="@layout/top_bar" /> -->
 
     <LinearLayout
         android:id="@+id/photo_layout"

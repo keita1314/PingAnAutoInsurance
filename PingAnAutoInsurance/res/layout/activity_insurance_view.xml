@@ -787,6 +787,12 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+              <Button 
+            android:id="@+id/insurance_upload"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+             android:background="@drawable/btn_bg"
+            android:text="上传"/>
         </LinearLayout>
     </ScrollView>
 

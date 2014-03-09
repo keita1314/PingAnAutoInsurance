@@ -13,7 +13,8 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.NoTitleBar" >
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+     	>
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -33,18 +34,54 @@
         </activity>
         <activity android:name="com.keita.pinganautoinsurance.InsuranceRecordActivity" >
         </activity>
-        <activity android:name="com.keita.pinganautoinsurance.InsurancePhotoActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.InsurancePhotoActivity" >
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.MainActivity" />
+            </activity>
         <activity android:name="com.keita.pinganautoinsurance.PhotoCommentActivity" />
-        <activity android:name="com.keita.pinganautoinsurance.InsuranceLocationActivity" />
-        <activity android:name="com.keita.pinganautoinsurance.InsuranceTextActivity" />
-        <activity android:name="com.keita.pinganautoinsurance.InsuranceListActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.InsuranceLocationActivity" >
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.MainActivity" />
+            </activity>
+        <activity android:name="com.keita.pinganautoinsurance.InsuranceTextActivity" >
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.MainActivity" />
+            </activity>
+        <activity android:name="com.keita.pinganautoinsurance.InsuranceListActivity" >
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.MainActivity" />
+            </activity>
         <activity android:name="com.keita.pinganautoinsurance.InsuranceViewActivity" />
         <activity android:name="com.keita.pinganautoinsurance.PhotoViewActivity" />
-        <activity android:name="com.keita.pinganautoinsurance.PhotoListActivity" />
-        <activity android:name="com.keita.pinganautoinsurance.RecordListActivity" />
-        <activity android:name="com.keita.pinganautoinsurance.TemplateListActivity" />
-        <activity android:name="com.keita.pinganautoinsurance.CreateTemplateActivity" />
-        <activity android:name="com.keita.pinganautoinsurance.AddEventActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.PhotoListActivity" >
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.MainActivity" />
+            </activity>
+        <activity android:name="com.keita.pinganautoinsurance.RecordListActivity" >
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.MainActivity" />
+            </activity>
+        <activity android:name="com.keita.pinganautoinsurance.TemplateListActivity" >
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.MainActivity" />
+            </activity>
+        <activity android:name="com.keita.pinganautoinsurance.CreateTemplateActivity" >
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.TemplateListActivity" />
+            </activity>
+        <activity android:name="com.keita.pinganautoinsurance.AddEventActivity" >
+             <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.TemplateListActivity" />
+        </activity>
         <activity android:name="com.keita.pinganautoinsurance.AboutMeActivity" />
     </application>
 
