@@ -11,6 +11,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -20,7 +22,7 @@ import android.widget.Toast;
 /*
  * 查看照片页面
  */
-public class PhotoViewActivity extends Activity {
+public class PhotoViewActivity extends ActionBarActivity {
 
 	private ImageView imageView = null;
 	private TextView textView = null;
@@ -30,6 +32,8 @@ public class PhotoViewActivity extends Activity {
 	// 数据库操作
 	DBHelper dbHelper = null;
 	SQLiteDatabase dataBase = null;
+	
+	private ActionBar actionBar = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,7 @@ public class PhotoViewActivity extends Activity {
 	// 标题栏退出按钮
 	public void setTopBar() {
 
-		ImageButton previous_button = null;
+		/*ImageButton previous_button = null;
 		View view = findViewById(R.id.top_bar);
 		TextView title = (TextView) view.findViewById(R.id.top_title);
 		title.setText("查看照片");
@@ -85,7 +89,10 @@ public class PhotoViewActivity extends Activity {
 				PhotoViewActivity.this.finish();
 			}
 
-		});
+		});*/
+		actionBar = getSupportActionBar();
+		actionBar.setTitle("照片");
+		//actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override

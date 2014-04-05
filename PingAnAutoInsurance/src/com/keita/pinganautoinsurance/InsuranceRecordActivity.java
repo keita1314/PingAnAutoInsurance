@@ -38,6 +38,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -62,7 +64,7 @@ import android.widget.Toast;
 /*
  * 案件录音页面 有少量文本记录
  */
-public class InsuranceRecordActivity extends Activity {
+public class InsuranceRecordActivity extends ActionBarActivity {
 	private EditText hurtNum = null;
 	private EditText deadNum = null;
 	private EditText accidentDetail = null;
@@ -130,6 +132,8 @@ public class InsuranceRecordActivity extends Activity {
 	private String templateName = null;
 	private ArrayList<Template> templateList = null;
 	private int templatePosition = 0;
+	
+	private ActionBar actionBar = null;
 	String[] caseLossArray = null;
 	String[] caseReasonArray = null;
 	String[] accidentReasonArray = null;
@@ -452,7 +456,7 @@ public class InsuranceRecordActivity extends Activity {
 
 	// 设置标题栏
 	public void setTopBar() {
-		ImageButton previous_button = null;
+		/*ImageButton previous_button = null;
 		ImageButton index_button = null;
 		View view = findViewById(R.id.top_bar);
 		TextView title = (TextView) view.findViewById(R.id.top_title);
@@ -490,7 +494,10 @@ public class InsuranceRecordActivity extends Activity {
 			}
 				
 			}
-		});
+		});*/
+		actionBar = getSupportActionBar();
+		actionBar.setTitle("案件录音");
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	// 判断文件是否存在

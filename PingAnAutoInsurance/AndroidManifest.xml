@@ -33,13 +33,17 @@
         <activity android:name="com.keita.pinganautoinsurance.InsuranceActivity" >
         </activity>
         <activity android:name="com.keita.pinganautoinsurance.InsuranceRecordActivity" >
+             <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.MainActivity" />
         </activity>
         <activity android:name="com.keita.pinganautoinsurance.InsurancePhotoActivity" >
             <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.keita.pinganautoinsurance.MainActivity" />
             </activity>
-        <activity android:name="com.keita.pinganautoinsurance.PhotoCommentActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.PhotoCommentActivity" >
+            </activity>
         <activity android:name="com.keita.pinganautoinsurance.InsuranceLocationActivity" >
             <meta-data
             android:name="android.support.PARENT_ACTIVITY"
@@ -55,7 +59,11 @@
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.keita.pinganautoinsurance.MainActivity" />
             </activity>
-        <activity android:name="com.keita.pinganautoinsurance.InsuranceViewActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.InsuranceViewActivity" >
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.InsuranceListActivity" />
+            </activity>
         <activity android:name="com.keita.pinganautoinsurance.PhotoViewActivity" />
         <activity android:name="com.keita.pinganautoinsurance.PhotoListActivity" >
             <meta-data
@@ -83,6 +91,11 @@
             android:value="com.keita.pinganautoinsurance.TemplateListActivity" />
         </activity>
         <activity android:name="com.keita.pinganautoinsurance.AboutMeActivity" />
+        <activity android:name="com.keita.pinganautoinsurance.SettingActivity">
+           <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.keita.pinganautoinsurance.MainActivity" /> 
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />

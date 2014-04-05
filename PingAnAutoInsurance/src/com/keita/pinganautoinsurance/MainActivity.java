@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.keita.pinganautoinsurance.database.DBHelper;
+import com.keita.pinganautoinsurance.R;
+import com.keita.pinganautoinsurance.mywidget.CircleImageView;
+import com.keita.pinganautoinsurance.mywidget.CircleLayout;
+import com.keita.pinganautoinsurance.mywidget.CircleLayout.OnItemClickListener;
+import com.keita.pinganautoinsurance.mywidget.CircleLayout.OnItemSelectedListener;
+
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -18,7 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -26,6 +32,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 
@@ -33,7 +40,7 @@ import android.widget.TextView;
  * 主菜单页 以girdvie的形式显示
  * 作者关基达
  */
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity  implements OnItemSelectedListener, OnItemClickListener{ 
 	private Button create_btn = null;
 	private Button view_btn = null;
 	private Button photo_btn = null;
@@ -44,15 +51,22 @@ public class MainActivity extends ActionBarActivity {
 	private ArrayList<HashMap<String, Object>> lstImageItem = null;
 	private SimpleAdapter simpleAdapter = null;
 	private ActionBar actionBar = null;
+	private TextView selectedTextView = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.circle_main);
 		//设置标题栏
 		
 		setTopBar();
-		gridView = (GridView) findViewById(R.id.gridview);
+		CircleLayout circleMenu = (CircleLayout)findViewById(R.id.main_circle_layout);
+		circleMenu.setOnItemSelectedListener(this);
+		circleMenu.setOnItemClickListener(this);
+
+		selectedTextView = (TextView)findViewById(R.id.main_selected_textView);
+		selectedTextView.setText(((CircleImageView)circleMenu.getSelectedItem()).getName());
+		/*gridView = (GridView) findViewById(R.id.gridview);
 		lstImageItem = new ArrayList<HashMap<String, Object>>();
 		getData();
 		simpleAdapter = new SimpleAdapter(this, lstImageItem,
@@ -101,7 +115,7 @@ public class MainActivity extends ActionBarActivity {
 
 			}
 
-		});
+		});*/
 	}
 
 	public void getData() {
@@ -159,12 +173,57 @@ public class MainActivity extends ActionBarActivity {
 	    switch (item.getItemId()) {
 	        case R.id.menu_about:
 	            Intent intent = new Intent();
-	            intent.setClass(MainActivity.this, AboutMeActivity.class);
+	            intent.setClass(MainActivity.this, SettingActivity.class);
 	            startActivity(intent);
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
+	}
+
+
+
+	@Override
+	public void onItemSelected(View view, int position, long id, String name) {
+		// TODO Auto-generated method stub
+		selectedTextView.setText(name);
+	}
+
+	@Override
+	public void onItemClick(View view, int position, long id, String name) {
+		// TODO Auto-generated method stub
+		//Toast.makeText(getApplicationContext(), name, Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent();
+		switch (view.getId()) {
+		case R.id.index_create:
+			intent.setClass(MainActivity.this,
+					InsuranceLocationActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.index_view:
+			intent.setClass(MainActivity.this,
+					InsuranceListActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.index_photo:
+			intent.setClass(MainActivity.this, PhotoListActivity.class);
+			startActivity(intent);
+			break;
+		case  R.id.index_record:
+			intent.setClass(MainActivity.this, RecordListActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.index_template:
+			intent.setClass(MainActivity.this,
+					TemplateListActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.index_aboutme:
+			intent.setClass(MainActivity.this,
+					AboutMeActivity.class);
+			startActivity(intent);
+			break;
+		}
 	}
 	
 	

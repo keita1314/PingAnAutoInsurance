@@ -14,6 +14,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -27,7 +29,7 @@ import android.widget.TextView;
 /*
  * 案件文本记录页面
  */
-public class InsuranceTextActivity extends Activity {
+public class InsuranceTextActivity extends ActionBarActivity {
 	// 初始化控件
 	private EditText caseNo = null;
 	private EditText caseOwner = null;
@@ -71,6 +73,8 @@ public class InsuranceTextActivity extends Activity {
 	//
 	String[] carNoArray = null;
 	String[] carTypeArray = null;
+	
+	private ActionBar actionBar = null;
 
 	private MyApplication application = null;
 
@@ -249,7 +253,7 @@ public class InsuranceTextActivity extends Activity {
 
 	// 设置标题栏
 	public void setTopBar() {
-		ImageButton previous_button = null;
+		/*ImageButton previous_button = null;
 		ImageButton index_button = null;
 		View view = findViewById(R.id.top_bar);
 		TextView title = (TextView) view.findViewById(R.id.top_title);
@@ -279,7 +283,10 @@ public class InsuranceTextActivity extends Activity {
 					application.getActivityList().remove(i);
 				}
 			}
-		});
+		});*/
+		actionBar = getSupportActionBar();
+		actionBar.setTitle("案件记录");
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	// 显示模版名列表的对话框

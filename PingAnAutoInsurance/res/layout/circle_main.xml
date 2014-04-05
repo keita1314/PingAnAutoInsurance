@@ -1,0 +1,104 @@
+<!--
+   Copyright 2013 Csaba Szugyiczki
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:circle="http://schemas.android.com/apk/res/com.keita.pinganautoinsurance"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+     <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_bar"
+        android:background="#FFFFFF"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/banner"
+   			android:adjustViewBounds="true"
+            android:scaleType="fitXY" 
+             />
+         <com.keita.pinganautoinsurance.mywidget.CircleLayout
+        android:id="@+id/main_circle_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/main_selected_textView"
+        android:layout_gravity="center_horizontal"
+        circle:firstChildPosition="South" 
+        circle:rotateToCenter="true" 
+        circle:isRotating="true" >       
+        circle:circleBackground="@drawable/green"  >
+
+
+        <com.keita.pinganautoinsurance.mywidget.CircleImageView
+            android:id="@+id/index_create"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/open_case"
+            circle:name="创建订单" />
+     
+        <com.keita.pinganautoinsurance.mywidget.CircleImageView
+            android:id="@+id/index_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/case_view"
+            circle:name="查看订单" />
+
+        <com.keita.pinganautoinsurance.mywidget.CircleImageView
+            android:id="@+id/index_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/photo"
+            circle:name="照片库" />
+
+        <com.keita.pinganautoinsurance.mywidget.CircleImageView
+            android:id="@+id/index_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/record"
+            circle:name="录音库"  />
+
+        <com.keita.pinganautoinsurance.mywidget.CircleImageView
+            android:id="@+id/index_template"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/tempalte"
+            circle:name="情景模板" />
+        
+		  <com.keita.pinganautoinsurance.mywidget.CircleImageView
+            android:id="@+id/index_aboutme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/aboutme"
+            circle:name="关于作者" />
+      
+    </com.keita.pinganautoinsurance.mywidget.CircleLayout>
+
+    <TextView
+        android:id="@+id/main_selected_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" /> 
+    </LinearLayout>
+
+    
+
+</RelativeLayout>

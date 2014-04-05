@@ -31,6 +31,8 @@ import org.apache.http.protocol.HTTP;
 import com.keita.pinganautoinsurance.database.DBHelper;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -44,6 +46,8 @@ import android.media.MediaRecorder;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -55,7 +59,7 @@ import android.widget.Toast;
 /*
  * 案件详情页面
  */
-public class InsuranceViewActivity extends Activity {
+public class InsuranceViewActivity extends ActionBarActivity {
 	private String insuranceCaseId = null;
 
 	private TextView caseNoTv = null;
@@ -130,7 +134,14 @@ public class InsuranceViewActivity extends Activity {
 	PlayAsyncTask play = null;
 	
 	/*上传文件按钮*/
-	private Button uploadButton;
+	private Button uploadButton = null;
+	
+	
+	private ActionBar actionBar = null;
+	
+	private Context context = null;
+	
+	private int status;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +149,8 @@ public class InsuranceViewActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_insurance_view);
-		ImageButton previous_button = null;
+		
+		/*ImageButton previous_button = null;
 		View view = findViewById(R.id.top_bar);
 		TextView title = (TextView) view.findViewById(R.id.top_title);
 		title.setText("案件详情");
@@ -151,7 +163,11 @@ public class InsuranceViewActivity extends Activity {
 				InsuranceViewActivity.this.finish();
 			}
 
-		});
+		});*/
+		
+		actionBar = getSupportActionBar();
+		actionBar.setTitle("案件详情");
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		caseNoTv = (TextView) findViewById(R.id.case_no);
 		caseOwnerTv = (TextView) findViewById(R.id.case_owner);
 		relationShipTv = (TextView) findViewById(R.id.relationship);
@@ -237,13 +253,18 @@ public class InsuranceViewActivity extends Activity {
 			}
 
 		});
+		
+		if(getParent()!=null)
+			context = getParent();
+		else
+			context = this;
 		/*上传保单*/
 		uploadButton.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				upload();
+				new UploadTask(context).execute();
 			}
 			
 		});
@@ -649,15 +670,17 @@ public class InsuranceViewActivity extends Activity {
 	}
 	/*上传函数*/
 	public void upload(){
-		Toast.makeText(this, "开始上传", Toast.LENGTH_SHORT);
+		
+		//Toast.makeText(this, "开始上传", Toast.LENGTH_SHORT);
 		String url = "http://192.168.1.102:8080/AdminDemo/upload.action";
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(url);
 		MultipartEntity entity = new MultipartEntity();
 
-		int status;
-		
-		FileBody record_body = new FileBody(recAudioFile);
+		//int status;
+		FileBody record_body = null;
+		if(recAudioFile != null)
+			record_body = new FileBody(recAudioFile);
 		FileBody img_body[] = new FileBody[]{null,null,null,null,null,null};
 		for(int i = 0;i<imgPath.length;i++){
 			if(imgPath[i] != null )
@@ -688,7 +711,8 @@ public class InsuranceViewActivity extends Activity {
 			entity.addPart("case_reason", new StringBody(caseReasonStr,Charset.forName(HTTP.UTF_8)));
 			entity.addPart("accident_reason", new StringBody(accidentReasonStr,Charset.forName(HTTP.UTF_8)));
 			entity.addPart("accident_detail", new StringBody(accidentDetailStr,Charset.forName(HTTP.UTF_8)));
-			entity.addPart("record", record_body);
+			if(record_body != null)
+				entity.addPart("record", record_body);
 			for(int i = 0;i<img_body.length;i++){
 				if(img_body[i] != null)
 					entity.addPart("img"+i, img_body[i]);
@@ -697,17 +721,7 @@ public class InsuranceViewActivity extends Activity {
 			httpPost.setEntity(entity);
 			httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 35000);
 			status = httpClient.execute(httpPost).getStatusLine().getStatusCode();
-			if (status == HttpStatus.SC_OK)
-			{
-				Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
-				System.out.println("上传成功"+status);
-				// 上传成功
-			} else
-			{
-				Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
-				System.out.println("上传失败"+status);
-				// 上传失败
-			}
+			
 
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
@@ -719,6 +733,58 @@ public class InsuranceViewActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+	private class UploadTask extends AsyncTask<Void,Void,Void>{
+		private ProgressDialog pd = null;
+		private Context context = null;
+		public UploadTask(Context context){
+			this.context = context;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			pd = new ProgressDialog(context);
+			pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			pd.setTitle("上传保单");
+			pd.setMessage("保单正在上传中...");
+			pd.show();
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			try{
+			upload();
+			}catch(Exception e){
+				e.printStackTrace();
+				this.cancel(true);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			if(pd != null)
+				pd.cancel();
+			if (status == HttpStatus.SC_OK)
+			{
+				Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
+				System.out.println("上传成功"+status);
+				// 上传成功
+			} else
+			{
+				Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
+				System.out.println("上传失败"+status);
+				// 上传失败
+			}
+			super.onPostExecute(result);
+		}
+
+		
 		
 	}
 	@Override

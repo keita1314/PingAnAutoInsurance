@@ -12,7 +12,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -24,7 +27,7 @@ import android.widget.Toast;
 /*
  * 照片评论页面
  */
-public class PhotoCommentActivity extends Activity {
+public class PhotoCommentActivity extends ActionBarActivity {
 	private ImageView imageView = null;
 	private TextImage textImage = null;
 	private EditText editText = null;
@@ -33,6 +36,7 @@ public class PhotoCommentActivity extends Activity {
 	private Bitmap bitmap = null;
 	private String comment = null;
 	private Intent resultIntent = null;
+	private ActionBar actionBar = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +93,7 @@ public class PhotoCommentActivity extends Activity {
 	// 标题栏退出按钮
 	public void setTopBar() {
 
-		ImageButton previous_button = null;
+		/*ImageButton previous_button = null;
 		View view = findViewById(R.id.top_bar);
 		TextView title = (TextView) view.findViewById(R.id.top_title);
 		title.setText("评论照片");
@@ -102,7 +106,10 @@ public class PhotoCommentActivity extends Activity {
 				PhotoCommentActivity.this.finish();
 			}
 
-		});
+		});*/
+		actionBar = getSupportActionBar();
+		actionBar.setTitle("评论照片");
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -113,4 +120,18 @@ public class PhotoCommentActivity extends Activity {
 			bitmap.recycle();
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+        case android.R.id.home:
+            // app icon in Action Bar clicked; go home
+        	PhotoCommentActivity.this.finish();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+    }
+	
+	}
+	
 }

@@ -125,8 +125,8 @@ public class RecordListActivity extends ActionBarActivity {
 					.findViewById(R.id.record_name);
 			TextView recordDateTv = (TextView) itemView
 					.findViewById(R.id.record_date);
-			Button play_Btn = (Button) itemView.findViewById(R.id.play_btn);
-			Button stop_Btn = (Button) itemView.findViewById(R.id.stop_btn);
+			ImageButton play_Btn = (ImageButton) itemView.findViewById(R.id.play_btn);
+			ImageButton stop_Btn = (ImageButton) itemView.findViewById(R.id.stop_btn);
 
 			recordNameTv.setText(currentFile.getName());
 			recordDateTv.setText(dateformat.format(new Date(currentFile

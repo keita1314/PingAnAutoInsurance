@@ -20,7 +20,7 @@ import android.widget.RelativeLayout;
  */
 public class ComboEditText extends RelativeLayout {
 	private AutoCompleteTextView autoTextView;
-	private Button button;
+	private ImageButton button;
 	private ImageView imageView;
 
 	public ComboEditText(Context context) {
@@ -55,7 +55,7 @@ public class ComboEditText extends RelativeLayout {
 		lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
 		lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
 		lp.addRule(RelativeLayout.ALIGN_RIGHT,autoTextView.getId());
-		button = new Button(context);
+		button = new ImageButton(context);
 		button.setBackgroundResource(R.drawable.arrow_item);
 		
 		button.setOnClickListener(new OnClickListener() {

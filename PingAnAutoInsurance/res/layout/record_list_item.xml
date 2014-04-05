@@ -32,7 +32,7 @@
             android:textColor="#000000" />
     </RelativeLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/play_btn"
         android:layout_width="30dip"
         android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
         android:layout_marginTop="5dip"
         android:background="@drawable/play_bg" />
 
-    <Button
+    <ImageButton
         android:id="@+id/stop_btn"
         android:layout_width="30dip"
         android:layout_height="wrap_content"
